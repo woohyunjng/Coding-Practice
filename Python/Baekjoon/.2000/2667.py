@@ -39,4 +39,4 @@ for i in range(N):
             res.append(val)
 
 print(len(res))
-print('\n'.join(map(str, sorted(res))))
+print("\n".join(map(str, sorted(res))))
