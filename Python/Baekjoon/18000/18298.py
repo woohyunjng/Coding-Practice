@@ -2,7 +2,14 @@ from math import floor
 
 
 def triangle(A, B, C):
-    return (A[0] * B[1] + B[0] * C[1] + C[0] * A[1] - A[1] * B[0] - B[1] * C[0] - C[1] * A[0]) / 2
+    return (
+        A[0] * B[1]
+        + B[0] * C[1]
+        + C[0] * A[1]
+        - A[1] * B[0]
+        - B[1] * C[0]
+        - C[1] * A[0]
+    ) / 2
 
 
 N = int(input())
@@ -18,6 +25,6 @@ for i in range(N):
     for j in range(1, P - 1):
         S += triangle(arr[0], arr[j], arr[j + 1])
     res += abs(S)
-    
+
 
 print(floor(res))

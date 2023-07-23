@@ -12,5 +12,5 @@ for i in range(T):
 
     for i in cloth.values():
         res *= i + 1
-    
+
     print(res - 1)

@@ -26,4 +26,4 @@ for i in range(N):
         if not len(d):
             print(-1)
             continue
-        print(d[-1])    
+        print(d[-1])

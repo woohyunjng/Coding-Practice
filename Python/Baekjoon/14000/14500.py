@@ -32,7 +32,11 @@ for i in range(N - 1):
 
 for i in range(N - 2):
     for j in range(M - 1):
-        sm = sum(arr[i][j : j + 2]) + sum(arr[i + 1][j : j + 2]) + sum(arr[i + 2][j : j + 2])
+        sm = (
+            sum(arr[i][j : j + 2])
+            + sum(arr[i + 1][j : j + 2])
+            + sum(arr[i + 2][j : j + 2])
+        )
         mx = max(mx, sm - arr[i][j] - arr[i + 1][j])
         mx = max(mx, sm - arr[i][j] - arr[i + 2][j + 1])
         mx = max(mx, sm - arr[i][j] - arr[i + 2][j])

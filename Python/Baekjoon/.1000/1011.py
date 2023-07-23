@@ -6,11 +6,11 @@ for i in range(T):
 
     j = 1
     while True:
-        if n <= j ** 2:
+        if n <= j**2:
             print(j * 2 - 1)
             break
         if n <= j * (j + 1):
             print(j * 2)
             break
-        
+
         j += 1

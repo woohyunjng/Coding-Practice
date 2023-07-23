@@ -40,7 +40,7 @@ while True:
                 arr[x][y] = 0
             else:
                 q.append((x, y))
-    
+
     arr_day.append(deepcopy(arr))
 
 res = 0

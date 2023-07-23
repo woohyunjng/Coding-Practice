@@ -5,5 +5,5 @@ for i in range(T):
     R = int(R)
 
     for i in S:
-        print(i * R, end = "")
+        print(i * R, end="")
     print()

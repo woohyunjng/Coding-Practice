@@ -11,7 +11,13 @@ if d >= r1 + r2:
     print("0.000")
     exit()
 
-cos1 = (r1 ** 2 + d ** 2 - r2 ** 2) / (2 * r1 * d)
-cos2 = (r2 ** 2 + d ** 2 - r1 ** 2) / (2 * r2 * d)
+cos1 = (r1**2 + d**2 - r2**2) / (2 * r1 * d)
+cos2 = (r2**2 + d**2 - r1**2) / (2 * r2 * d)
 
-print(round((r1 ** 2 * acos(cos1) + r2 ** 2 * acos(cos2) - (1 - cos1 ** 2) ** 0.5 * r1 * d) * 1000) / 1000)
+print(
+    round(
+        (r1**2 * acos(cos1) + r2**2 * acos(cos2) - (1 - cos1**2) ** 0.5 * r1 * d)
+        * 1000
+    )
+    / 1000
+)

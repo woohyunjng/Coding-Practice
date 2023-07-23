@@ -14,7 +14,7 @@ for i in range(2, N + 1):
 
     for j in S[-1]:
         K.append(" ".join([j, j]))
-    
+
     S.append(K)
 
 stdout.write("\n".join(S[-1]))

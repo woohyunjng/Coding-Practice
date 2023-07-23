@@ -2,7 +2,14 @@ from math import floor
 
 
 def triangle(A, B, C):
-    return (A[0] * B[1] + B[0] * C[1] + C[0] * A[1] - A[1] * B[0] - B[1] * C[0] - C[1] * A[0]) / 2
+    return (
+        A[0] * B[1]
+        + B[0] * C[1]
+        + C[0] * A[1]
+        - A[1] * B[0]
+        - B[1] * C[0]
+        - C[1] * A[0]
+    ) / 2
 
 
 def rround(N):

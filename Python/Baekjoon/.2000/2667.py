@@ -28,8 +28,9 @@ def dfs(i, j):
 
     for i2, j2 in get_next(i, j):
         res_val += dfs(i2, j2)
-    
+
     return res_val
+
 
 res = []
 for i in range(N):

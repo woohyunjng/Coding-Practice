@@ -25,4 +25,3 @@ if len(mx_num) > 1:
 else:
     print(mx_num[0])
 print(max(arr) - min(arr))
-

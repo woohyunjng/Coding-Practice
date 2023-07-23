@@ -4,6 +4,7 @@ def round(n):
     else:
         return int(n)
 
+
 n = int(input())
 arr = []
 

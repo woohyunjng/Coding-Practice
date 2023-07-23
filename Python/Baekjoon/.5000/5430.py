@@ -28,7 +28,7 @@ for i in range(T):
                 else:
                     error = True
                     break
-    
+
     if error:
         print("error")
         continue

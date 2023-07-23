@@ -16,7 +16,7 @@ for i in range(N):
 
     if not s:
         s.append(h)
-    
+
     res += len(s) - 1
 
 print(res)

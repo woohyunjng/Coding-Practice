@@ -12,7 +12,7 @@ for i in range(N):
             if num < 0:
                 f = False
                 break
-    
+
     if num:
         f = False
 

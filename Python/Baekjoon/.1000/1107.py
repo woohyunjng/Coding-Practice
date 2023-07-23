@@ -44,4 +44,4 @@ if M != 10:
         res = len(str(i)) + i - N
         break
 
-print(res)   
+print(res)

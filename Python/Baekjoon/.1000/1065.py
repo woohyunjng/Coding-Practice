@@ -13,9 +13,8 @@ for i in range(1, N + 1):
         if int(str(i)[j]) - int(str(i)[j - 1]) != d:
             check = False
             break
-    
+
     if check:
         res += 1
 
 print(res)
-    

@@ -10,5 +10,5 @@ for i in range(T):
             add_score += 1
         else:
             add_score = 1
-    
+
     print(score)

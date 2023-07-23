@@ -21,4 +21,3 @@ for i in B:
         print(1, end=" ")
     else:
         print(0, end=" ")
-

@@ -31,7 +31,7 @@ for a in range(mx_height):
 
                         q.append((f, g))
                         checked[f][g] = True
-    
+
     mx = max(mx, res)
 
 print(mx)

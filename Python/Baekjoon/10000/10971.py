@@ -15,7 +15,7 @@ def dfs(p, start, visited):
             visited[i] = False
         elif visited[i]:
             x += 1
-    
+
     if x == N and W[p][start]:
         return W[p][start]
 

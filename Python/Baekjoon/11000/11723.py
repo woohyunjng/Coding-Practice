@@ -1,4 +1,4 @@
-from sys import stdin 
+from sys import stdin
 
 M = int(input())
 st = {i: False for i in range(1, 21)}
@@ -7,7 +7,7 @@ empt_st = {i: False for i in range(1, 21)}
 
 for i in range(M):
     S = stdin.readline().rstrip()
-    
+
     if S.startswith("add"):
         st[int(S[4:])] = True
     elif S.startswith("remove"):

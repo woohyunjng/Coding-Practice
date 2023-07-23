@@ -11,4 +11,3 @@ while True:
         break
 
     K += 1
-    

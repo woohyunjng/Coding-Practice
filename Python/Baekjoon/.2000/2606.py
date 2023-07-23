@@ -19,6 +19,6 @@ def dfs(P):
             checked[i] = True
             res += dfs(i)
     return res
-    
+
 
 print(dfs(1) - 1)

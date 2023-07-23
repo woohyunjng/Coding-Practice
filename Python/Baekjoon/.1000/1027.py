@@ -7,7 +7,7 @@ for i in range(N):
     for j in range(N):
         if i == j:
             continue
-        
+
         check = True
         if i > j:
             for k in range(j + 1, i):

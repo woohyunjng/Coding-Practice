@@ -1,5 +1,5 @@
 A, B = map(int, input().split())
-p = [True for i in range(round(B ** 0.5) + 1)]
+p = [True for i in range(round(B**0.5) + 1)]
 
 for i in range(2, round(len(p) ** 0.5) + 1):
     if not p[i]:
@@ -14,8 +14,8 @@ for i in range(2, len(p)):
         continue
 
     j = 2
-    while i ** j <= B:
-        if i ** j >= A:
+    while i**j <= B:
+        if i**j >= A:
             res += 1
         j += 1
 
