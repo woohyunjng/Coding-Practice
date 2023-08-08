@@ -4,7 +4,6 @@ N = input()
 A = list(map(int, input().split()))
 X, Y = [], []
 
-
 for i in A:
     if len(X) == 0 or X[-1] < i:
         X.append(i)
