@@ -1,15 +1,15 @@
-from bisect import bisect_left
-
 N = int(input())
 A = list(map(int, input().split()))
-X, res = [], 0
+B = [0 for i in range(N)]
 
+for i in range(N):
+    B[A[i] - 1] = i
+X = [0 for i in range(N)]
 
 for i in A:
-    if len(X) == 0 or X[-1] < i:
-        X.append(i)
-        res += 1
+    if i != 1 and B[i - 2] < B[i - 1]:
+        X[i - 1] = X[i - 2] + 1
     else:
-        X[bisect_left(X, i)] = i
+        X[i - 1] += 1
 
-print(N - res)
+print(N - max(X))
