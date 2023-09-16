@@ -16,9 +16,10 @@ int main()
     cin >> N >> ML >> MD;
     long long min_dis[N + 1];
 
-    for (int i = 2; i <= N; i++)
+    for (int i = 1; i < N; i++)
     {
         min_dis[i + 1] = MAX_INT;
+        arr.push_back(make_pair(make_pair(i + 1, i), 0));
     }
     min_dis[1] = 0;
 
@@ -38,7 +39,7 @@ int main()
     {
         for (pl j : arr)
         {
-            if (min_dis[j.first.first] != MAX_INT && j.second + min_dis[j.first.first] < min_dis[j.first.second])
+            if (min_dis[j.first.first] != MAX_INT && j.second != MAX_INT && j.second + min_dis[j.first.first] < min_dis[j.first.second])
             {
                 min_dis[j.first.second] = j.second + min_dis[j.first.first];
                 if (i == N - 1)
