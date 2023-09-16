@@ -3,7 +3,8 @@
 #include <stack>
 using namespace std;
 
-int main() {
+int main()
+{
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
@@ -14,7 +15,8 @@ int main() {
     vector<pair<int, int>> arr[N + 1];
     bool checked[N + 1] = {};
 
-    for (int i = 0 ; i < N - 1 ; i ++) {
+    for (int i = 0; i < N - 1; i++)
+    {
         cin >> u >> v >> w;
         arr[u].push_back(make_pair(v, w));
         arr[v].push_back(make_pair(u, w));
@@ -27,11 +29,13 @@ int main() {
     st.push(1);
     checked[1] = true;
 
-    while (!st.empty()) {
+    while (!st.empty())
+    {
         a = st.top();
         st.pop();
 
-        for (pair<int, int> i : arr[a]) {
+        for (pair<int, int> i : arr[a])
+        {
             if (checked[i.first])
                 continue;
 
@@ -40,7 +44,8 @@ int main() {
             depth[i.first] = depth[a] + 1;
             length[i.first] = length[a] + (long long int)i.second;
 
-            for (int j = 1 ; 1 << j <= N ; j ++) {
+            for (int j = 1; 1 << j <= N; j++)
+            {
                 if (!parent[i.first][j - 1])
                     break;
                 parent[i.first][j] = parent[parent[i.first][j - 1]][j - 1];
@@ -51,12 +56,16 @@ int main() {
     }
 
     cin >> M;
-    while (M--) {
+    while (M--)
+    {
         cin >> a >> u >> v;
-        if (depth[u] < depth[v]) {
+        if (depth[u] < depth[v])
+        {
             x = v;
             y = u;
-        } else {
+        }
+        else
+        {
             x = u;
             y = v;
         }
@@ -64,15 +73,18 @@ int main() {
         diff = depth[x] - depth[y];
         int i = 0;
 
-        while (diff) {
+        while (diff)
+        {
             if (diff % 2)
                 x = parent[x][i];
-            i ++;
+            i++;
             diff /= 2;
         }
 
-        for (int i = 18 ; i >= 0 ; i --) {
-            if (parent[x][i] != parent[y][i]) {
+        for (int i = 18; i >= 0; i--)
+        {
+            if (parent[x][i] != parent[y][i])
+            {
                 x = parent[x][i];
                 y = parent[y][i];
             }
@@ -81,25 +93,33 @@ int main() {
         if (x != y)
             x = parent[x][0];
 
-        if (a == 1) {
+        if (a == 1)
+        {
             cout << length[u] + length[v] - length[x] * 2 << '\n';
-        } else {
+        }
+        else
+        {
             cin >> k;
             k -= 1;
 
-            if (depth[u] - depth[x] >= k) {
+            if (depth[u] - depth[x] >= k)
+            {
                 x = u;
-            } else {
+            }
+            else
+            {
                 k = depth[u] + depth[v] - depth[x] * 2 - k;
                 x = v;
             }
 
             int i = 0;
-            while (k) {
-                if (k % 2) {
+            while (k)
+            {
+                if (k % 2)
+                {
                     x = parent[x][i];
                 }
-                i ++;
+                i++;
                 k /= 2;
             }
             cout << x << '\n';

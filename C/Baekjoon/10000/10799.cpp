@@ -4,7 +4,8 @@
 
 using namespace std;
 
-int main() {
+int main()
+{
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
@@ -15,10 +16,12 @@ int main() {
 
     cin >> S;
 
-    for (int i = 0 ; i < S.size() ; i ++) {
+    for (int i = 0; i < S.size(); i++)
+    {
         if (S[i] == '(')
             st.push(i);
-        else {
+        else
+        {
             int p = st.top();
             st.pop();
 

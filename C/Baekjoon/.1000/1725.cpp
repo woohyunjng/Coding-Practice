@@ -7,41 +7,59 @@ using namespace std;
 pair<int, int> tree[100001 * 4];
 int arr[100001], N;
 
-void init(int node, int start, int end) {
-    if (start == end) {
+void init(int node, int start, int end)
+{
+    if (start == end)
+    {
         tree[node] = make_pair(arr[start], start);
-    } else {
+    }
+    else
+    {
         init(node * 2, start, (int)((start + end) / 2));
         init(node * 2 + 1, (int)((start + end) / 2) + 1, end);
 
         pair<int, int> left = tree[node * 2], right = tree[node * 2 + 1];
-        if (left.first <= right.first) {
+        if (left.first <= right.first)
+        {
             tree[node] = left;
-        } else {
+        }
+        else
+        {
             tree[node] = right;
         }
     }
 }
 
-pair<int, int> query(int node, int start, int end, int left, int right) {
-    if (left > end || right < start) {
+pair<int, int> query(int node, int start, int end, int left, int right)
+{
+    if (left > end || right < start)
+    {
         return make_pair(1000000001, -1);
-    } else if (left <= start && end <= right) {
+    }
+    else if (left <= start && end <= right)
+    {
         return tree[node];
-    } else {
+    }
+    else
+    {
         pair<int, int> left_min = query(node * 2, start, (int)((start + end) / 2), left, right);
         pair<int, int> right_min = query(node * 2 + 1, (int)((start + end) / 2) + 1, end, left, right);
 
-        if (left_min.first <= right_min.first) {
+        if (left_min.first <= right_min.first)
+        {
             return left_min;
-        } else {
+        }
+        else
+        {
             return right_min;
         }
     }
 }
 
-int get_max(int left, int right) {
-    if (right < left) {
+int get_max(int left, int right)
+{
+    if (right < left)
+    {
         return 0;
     }
 
@@ -54,14 +72,16 @@ int get_max(int left, int right) {
     return res;
 }
 
-int main() {
+int main()
+{
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
 
     cin >> N;
 
-    for (int i = 0 ; i < N ; i ++) {
+    for (int i = 0; i < N; i++)
+    {
         cin >> arr[i];
     }
 

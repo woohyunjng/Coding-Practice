@@ -4,12 +4,14 @@ using namespace std;
 
 int H[500][500], dp[500][500] = {}, checked[500][500] = {}, M, N;
 
-void dfs(int x, int y) {
+void dfs(int x, int y)
+{
     int res = 0;
     checked[x][y] = 1;
 
-    int go[4][2] = { { x + 1, y }, { x - 1, y }, { x, y + 1 }, { x, y - 1 } };
-    for (int i = 0 ; i < 4; i ++) {
+    int go[4][2] = {{x + 1, y}, {x - 1, y}, {x, y + 1}, {x, y - 1}};
+    for (int i = 0; i < 4; i++)
+    {
         if (go[i][0] < 0 || go[i][0] >= M || go[i][1] < 0 || go[i][1] >= N || checked[go[i][0]][go[i][1]])
             continue;
         if (H[go[i][0]][go[i][1]] >= H[x][y] || dp[go[i][0]][go[i][1]] == -1)
@@ -28,10 +30,13 @@ void dfs(int x, int y) {
         dp[x][y] = -1;
 }
 
-int main() {
+int main()
+{
     cin >> M >> N;
-    for (int i = 0 ; i < M ; i ++) {
-        for (int j = 0 ; j < N ; j ++) {
+    for (int i = 0; i < M; i++)
+    {
+        for (int j = 0; j < N; j++)
+        {
             cin >> H[i][j];
         }
     }

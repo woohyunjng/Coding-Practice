@@ -3,7 +3,8 @@
 #include <stack>
 using namespace std;
 
-int main() {
+int main()
+{
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
@@ -14,7 +15,8 @@ int main() {
     vector<int> arr[N + 1];
     bool checked[N + 1] = {};
 
-    for (int i = 0 ; i < N - 1 ; i ++) {
+    for (int i = 0; i < N - 1; i++)
+    {
         cin >> a >> b;
         arr[a].push_back(b);
         arr[b].push_back(a);
@@ -26,11 +28,13 @@ int main() {
     st.push(1);
     checked[1] = true;
 
-    while (!st.empty()) {
+    while (!st.empty())
+    {
         a = st.top();
         st.pop();
 
-        for (int i : arr[a]) {
+        for (int i : arr[a])
+        {
             if (checked[i])
                 continue;
 
@@ -38,7 +42,8 @@ int main() {
             checked[i] = true;
             depth[i] = depth[a] + 1;
 
-            for (int j = 1 ; 1 << j <= N ; j ++) {
+            for (int j = 1; 1 << j <= N; j++)
+            {
                 if (!parent[i][j - 1])
                     break;
                 parent[i][j] = parent[parent[i][j - 1]][j - 1];
@@ -49,9 +54,11 @@ int main() {
     }
 
     cin >> M;
-    for (int i = 0 ; i < M ; i ++) {
+    for (int i = 0; i < M; i++)
+    {
         cin >> a >> b;
-        if (depth[a] < depth[b]) {
+        if (depth[a] < depth[b])
+        {
             c = b;
             b = a;
             a = c;
@@ -60,15 +67,18 @@ int main() {
         diff = depth[a] - depth[b];
         j = 0;
 
-        while (diff) {
+        while (diff)
+        {
             if (diff % 2)
                 a = parent[a][j];
-            j ++;
+            j++;
             diff /= 2;
         }
 
-        for (int j = 17 ; j >= 0 ; j --) {
-            if (parent[a][j] != parent[b][j]) {
+        for (int j = 17; j >= 0; j--)
+        {
+            if (parent[a][j] != parent[b][j])
+            {
                 a = parent[a][j];
                 b = parent[b][j];
             }

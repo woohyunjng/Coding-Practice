@@ -3,7 +3,8 @@
 #include <stack>
 using namespace std;
 
-int main() {
+int main()
+{
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
@@ -14,7 +15,8 @@ int main() {
     vector<pair<int, int>> arr[N + 1];
     bool checked[N + 1] = {};
 
-    for (int i = 0 ; i < N - 1 ; i ++) {
+    for (int i = 0; i < N - 1; i++)
+    {
         cin >> a >> b >> c;
         arr[a].push_back(make_pair(b, c));
         arr[b].push_back(make_pair(a, c));
@@ -26,11 +28,13 @@ int main() {
     st.push(1);
     checked[1] = true;
 
-    while (!st.empty()) {
+    while (!st.empty())
+    {
         a = st.top();
         st.pop();
 
-        for (pair<int, int> i : arr[a]) {
+        for (pair<int, int> i : arr[a])
+        {
             if (checked[i.first])
                 continue;
 
@@ -39,7 +43,8 @@ int main() {
             depth[i.first] = depth[a] + 1;
             length[i.first] = length[a] + i.second;
 
-            for (int j = 1 ; 1 << j <= N ; j ++) {
+            for (int j = 1; 1 << j <= N; j++)
+            {
                 if (!parent[i.first][j - 1])
                     break;
                 parent[i.first][j] = parent[parent[i.first][j - 1]][j - 1];
@@ -50,12 +55,16 @@ int main() {
     }
 
     cin >> M;
-    for (int i = 0 ; i < M ; i ++) {
+    for (int i = 0; i < M; i++)
+    {
         cin >> a >> b;
-        if (depth[a] < depth[b]) {
+        if (depth[a] < depth[b])
+        {
             x = b;
             y = a;
-        } else {
+        }
+        else
+        {
             x = a;
             y = b;
         }
@@ -63,15 +72,18 @@ int main() {
         diff = depth[x] - depth[y];
         j = 0;
 
-        while (diff) {
+        while (diff)
+        {
             if (diff % 2)
                 x = parent[x][j];
-            j ++;
+            j++;
             diff /= 2;
         }
 
-        for (int j = 16 ; j >= 0 ; j --) {
-            if (parent[x][j] != parent[y][j]) {
+        for (int j = 16; j >= 0; j--)
+        {
+            if (parent[x][j] != parent[y][j])
+            {
                 x = parent[x][j];
                 y = parent[y][j];
             }
