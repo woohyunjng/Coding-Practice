@@ -1,7 +1,5 @@
 # 100 / 100
 
-from collections import deque
-
 K = int(input())
 X = list(map(int, input()))
 
