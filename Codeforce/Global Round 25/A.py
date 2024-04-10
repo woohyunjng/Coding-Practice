@@ -1,3 +1,5 @@
+# 445/500
+
 T = int(input())
 for t in range(T):
     N = int(input())

@@ -1,3 +1,5 @@
+# 1240/1500
+
 from sys import stdin
 
 T = int(stdin.readline())

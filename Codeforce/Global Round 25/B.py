@@ -1,3 +1,5 @@
+# 776/1000
+
 from sys import stdin
 
 T = int(stdin.readline())
