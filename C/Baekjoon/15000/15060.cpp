@@ -1,8 +1,9 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <unordered_map>
 #include <stack>
-#define MAX 200001
+#define MAX 100001
 using namespace std;
 
 int parent[MAX];
@@ -26,16 +27,14 @@ int main()
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    int N, M, Q, U, V, A, B, rt = -1;
-    long long W, def = 0;
-    vector<pair<long long int, pair<int, int>>> unsorted_lines, lines;
+    int N, M, Q, U, V, A, B, rt = -1, W, def = 0;
+    vector<pair<int, pair<int, int>>> lines;
 
     cin >> N >> M;
     for (int i = 1; i <= N; i++)
         parent[i] = i;
 
-    int money[N + 1][N + 1];
-
+    unordered_map<int, int> money[N + 1];
     while (M--)
     {
         cin >> U >> V >> W;
@@ -43,17 +42,16 @@ int main()
         money[V][U] = W;
 
         lines.push_back({W, {U, V}});
-        unsorted_lines.push_back({W, {U, V}});
     }
     sort(lines.begin(), lines.end());
 
-    vector<pair<int, long long int>> arr[N + 1];
-    int depth[N + 1]{};
+    vector<pair<int, int>> arr[N + 1];
+    int depth[N + 1] = {};
     stack<int> st;
-    pair<int, long long int> parent[N + 1][18] = {(pair<int, long long int>){0, 0}};
+    pair<int, int> parent[N + 1][18] = {(pair<int, int>){0, 0}};
     bool checked[N + 1] = {};
 
-    for (pair<long long int, pair<int, int>> i : lines)
+    for (pair<int, pair<int, int>> i : lines)
     {
         A = find(i.second.first), B = find(i.second.second);
         if (A == B)
@@ -77,7 +75,7 @@ int main()
         A = st.top();
         st.pop();
 
-        for (pair<int, long long int> i : arr[A])
+        for (pair<int, int> i : arr[A])
         {
             if (checked[i.first])
                 continue;
@@ -104,36 +102,34 @@ int main()
     while (Q--)
     {
         cin >> A >> B;
-
         if (depth[A] < depth[B])
             swap(A, B);
 
-        int diff = depth[A] - depth[B], j = 0, U = money[A][B];
-        long long int res = 0;
+        int diff = depth[A] - depth[B], i = 0, U = money[A][B];
+        int res = 0;
 
         while (diff)
         {
             if (diff % 2)
             {
-                res = max(res, parent[A][j].second);
-                A = parent[A][j].first;
+                res = max(res, parent[A][i].second);
+                A = parent[A][i].first;
             }
-            j++;
+            i++;
             diff >>= 1;
         }
 
-        for (int j = 17; j >= 0; j--)
+        for (int i = 17; i >= 0; i--)
         {
-            if (parent[A][j].first != parent[B][j].first)
+            if (parent[A][i].first != parent[B][i].first)
             {
-                res = max(res, max(parent[A][j].second, parent[B][j].second));
-                A = parent[A][j].first, B = parent[B][j].first;
+                res = max(res, max(parent[A][i].second, parent[B][i].second));
+                A = parent[A][i].first, B = parent[B][i].first;
             }
         }
 
         if (A != B)
             res = max(res, max(parent[A][0].second, parent[B][0].second));
-
         cout << def - res + U << '\n';
     }
 }
