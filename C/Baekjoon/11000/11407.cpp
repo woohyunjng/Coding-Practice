@@ -1,12 +1,12 @@
 #include <bits/stdc++.h>
 #define int long long
-#define MAX 1000
+#define MAX 300
 
 using namespace std;
 typedef pair<int, int> pr;
 
 vector<int> arr[MAX];
-int cap[MAX][MAX], flow[MAX][MAX], cost[MAX][MAX], dp[MAX], parent[MAX];
+int cap[MAX][MAX], flow[MAX][MAX], cost[MAX][MAX], dp[MAX], parent[MAX], C[MAX][MAX];
 bool checked[MAX];
 
 void add_path(int A, int B, int cst, int cap_size)
@@ -80,24 +80,39 @@ signed main()
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    int N, M, A, B, C;
+    int N, M, A, K;
     cin >> N >> M;
+    K = N + M + 1;
 
     for (int i = 1; i <= N; i++)
     {
-        add_path(0, i, 0, 1);
         cin >> A;
-        for (int j = 0; j < A; j++)
-        {
-            cin >> B >> C;
-            add_path(i, N + B, C, 1);
-        }
+        add_path(M + i, K, 0, A);
     }
 
     for (int i = 1; i <= M; i++)
-        add_path(N + i, N + M + 1, 0, 1);
+    {
+        cin >> A;
+        add_path(0, i, 0, A);
+    }
 
-    pr res = minimum_cost_maximum_flow(0, N + M + 1);
+    for (int i = 1; i <= M; i++)
+    {
+        for (int j = 1; j <= N; j++)
+            cin >> C[i][j];
+    }
+
+    for (int i = 1; i <= M; i++)
+    {
+        for (int j = 1; j <= N; j++)
+        {
+            cin >> A;
+            add_path(i, M + j, A, C[i][j]);
+        }
+    }
+
+    pr res = minimum_cost_maximum_flow(0, K);
     cout << res.first << '\n'
          << res.second;
+    return 0;
 }

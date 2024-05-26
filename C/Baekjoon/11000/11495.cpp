@@ -1,11 +1,13 @@
 #include <bits/stdc++.h>
 #define int long long
-#define MAX 400
+#define MAX 3000
 
 using namespace std;
+typedef pair<int, int> pr;
 
 vector<int> arr[MAX];
-int cap[MAX][MAX], flow[MAX][MAX], level[MAX], work[MAX];
+int cap[MAX][MAX], flow[MAX][MAX], level[MAX], work[MAX], board[MAX][MAX];
+pr go[4] = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
 
 void add_path(int A, int B, int cap_size)
 {
@@ -82,27 +84,42 @@ signed main()
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    int N, K, D, cap_size, Z, go;
-    cin >> N >> K >> D;
-
-    for (int i = 1; i <= D; i++)
+    int T, N, M, K, res, sm, x, y;
+    cin >> T;
+    while (T--)
     {
-        cin >> cap_size;
-        add_path(N + i, N + D + 1, cap_size);
-    }
+        cin >> N >> M;
+        K = N * M + 1;
+        for (int i = 0; i <= K; i++)
+            arr[i].clear();
 
-    for (int i = 1; i <= N; i++)
-    {
-        cin >> Z;
-        add_path(0, i, K);
-        while (Z--)
+        sm = 0;
+        for (int i = 1; i <= N; i++)
         {
-            cin >> go;
-            add_path(i, N + go, 1);
-        }
-    }
+            for (int j = 1; j <= M; j++)
+            {
+                cin >> board[i][j];
+                sm += board[i][j];
 
-    cout << maximum_flow(0, N + D + 1);
+                if ((i + j) % 2)
+                    add_path((i - 1) * M + j, K, board[i][j]);
+                else
+                {
+                    add_path(0, (i - 1) * M + j, board[i][j]);
+                    for (pr k : go)
+                    {
+                        x = i + k.first, y = j + k.second;
+                        if (x <= 0 || x > N || y <= 0 || y > M)
+                            continue;
+                        add_path((i - 1) * M + j, (x - 1) * M + y, board[i][j]);
+                    }
+                }
+            }
+        }
+
+        res = maximum_flow(0, K);
+        cout << sm - res << '\n';
+    }
 
     return 0;
 }

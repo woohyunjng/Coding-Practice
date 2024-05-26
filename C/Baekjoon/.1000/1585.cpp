@@ -1,12 +1,12 @@
 #include <bits/stdc++.h>
 #define int long long
-#define MAX 1000
+#define MAX 300
 
 using namespace std;
 typedef pair<int, int> pr;
 
 vector<int> arr[MAX];
-int cap[MAX][MAX], flow[MAX][MAX], cost[MAX][MAX], dp[MAX], parent[MAX];
+int cap[MAX][MAX], flow[MAX][MAX], cost[MAX][MAX], dp[MAX], parent[MAX], start_time[MAX], end_time[MAX];
 bool checked[MAX];
 
 void add_path(int A, int B, int cst, int cap_size)
@@ -19,6 +19,7 @@ void add_path(int A, int B, int cst, int cap_size)
 
     cap[A][B] = cap_size;
     flow[A][B] = 0;
+    flow[B][A] = 0;
 }
 
 pr minimum_cost_maximum_flow(int start, int end)
@@ -80,24 +81,71 @@ signed main()
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    int N, M, A, B, C;
-    cin >> N >> M;
+    int N, A, K, T, F;
+    cin >> N;
+    K = N * 2 + 1;
+
+    for (int i = 1; i <= N; i++)
+    {
+        cin >> start_time[i];
+        add_path(0, i, 0, 1);
+    }
+
+    for (int i = 1; i <= N; i++)
+    {
+        cin >> end_time[i];
+        add_path(N + i, K, 0, 1);
+    }
+
+    cin >> T;
+    cin >> F;
+
+    for (int i = 1; i <= N; i++)
+    {
+        for (int j = 1; j <= N; j++)
+        {
+            if (start_time[i] < end_time[j])
+            {
+                if (end_time[j] - start_time[i] >= T)
+                    add_path(i, N + j, 0, 1);
+                else
+                    add_path(i, N + j, min((T - (end_time[j] - start_time[i])) * (T - (end_time[j] - start_time[i])), F), 1);
+            }
+        }
+    }
+
+    pr res = minimum_cost_maximum_flow(0, K);
+    if (res.first < N)
+    {
+        cout << -1;
+        return 0;
+    }
+    cout << res.second << ' ';
+
+    for (int i = 0; i <= K; i++)
+        arr[i].clear();
 
     for (int i = 1; i <= N; i++)
     {
         add_path(0, i, 0, 1);
-        cin >> A;
-        for (int j = 0; j < A; j++)
+        add_path(N + i, K, 0, 1);
+    }
+
+    for (int i = 1; i <= N; i++)
+    {
+        for (int j = 1; j <= N; j++)
         {
-            cin >> B >> C;
-            add_path(i, N + B, C, 1);
+            if (start_time[i] < end_time[j])
+            {
+                if (end_time[j] - start_time[i] >= T)
+                    add_path(i, N + j, 0, 1);
+                else
+                    add_path(i, N + j, -min((T - (end_time[j] - start_time[i])) * (T - (end_time[j] - start_time[i])), F), 1);
+            }
         }
     }
 
-    for (int i = 1; i <= M; i++)
-        add_path(N + i, N + M + 1, 0, 1);
-
-    pr res = minimum_cost_maximum_flow(0, N + M + 1);
-    cout << res.first << '\n'
-         << res.second;
+    res = minimum_cost_maximum_flow(0, K);
+    cout << -res.second;
+    return 0;
 }

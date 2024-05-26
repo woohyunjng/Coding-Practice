@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 #define int long long
-#define MAX 1000
+#define MAX 300
 
 using namespace std;
 typedef pair<int, int> pr;
@@ -19,6 +19,7 @@ void add_path(int A, int B, int cst, int cap_size)
 
     cap[A][B] = cap_size;
     flow[A][B] = 0;
+    flow[B][A] = 0;
 }
 
 pr minimum_cost_maximum_flow(int start, int end)
@@ -80,24 +81,27 @@ signed main()
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    int N, M, A, B, C;
-    cin >> N >> M;
+    int N, K, A;
+    cin >> N;
+    K = 2 * N + 1;
 
     for (int i = 1; i <= N; i++)
     {
         add_path(0, i, 0, 1);
-        cin >> A;
-        for (int j = 0; j < A; j++)
+        add_path(N + i, K, 0, 1);
+    }
+    
+    for (int i = 1; i <= N; i++)
+    {
+        for (int j = 1; j <= N; j++)
         {
-            cin >> B >> C;
-            add_path(i, N + B, C, 1);
+            cin >> A;
+            add_path(i, N + j, A, 1);
         }
     }
 
-    for (int i = 1; i <= M; i++)
-        add_path(N + i, N + M + 1, 0, 1);
+    pr res = minimum_cost_maximum_flow(0, K);
+    cout << res.second;
 
-    pr res = minimum_cost_maximum_flow(0, N + M + 1);
-    cout << res.first << '\n'
-         << res.second;
+    return 0;
 }
