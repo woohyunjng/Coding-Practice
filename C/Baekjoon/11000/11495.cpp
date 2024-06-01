@@ -9,12 +9,18 @@ vector<int> arr[MAX];
 int cap[MAX][MAX], flow[MAX][MAX], level[MAX], work[MAX], board[MAX][MAX];
 pr go[4] = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
 
+int convert(int A, int B, int K) { return (A - 1) * K + B; }
+
 void add_path(int A, int B, int cap_size)
 {
     arr[A].push_back(B);
     arr[B].push_back(A);
+
     cap[A][B] = cap_size;
+    cap[B][A] = 0;
+
     flow[A][B] = 0;
+    flow[B][A] = 0;
 }
 
 int dinic_dfs(int K, int F, int end)
@@ -86,6 +92,7 @@ signed main()
 
     int T, N, M, K, res, sm, x, y;
     cin >> T;
+
     while (T--)
     {
         cin >> N >> M;
@@ -101,17 +108,17 @@ signed main()
                 cin >> board[i][j];
                 sm += board[i][j];
 
-                if ((i + j) % 2)
-                    add_path((i - 1) * M + j, K, board[i][j]);
+                if ((i + j) & 1)
+                    add_path(convert(i, j, M), K, board[i][j]);
                 else
                 {
-                    add_path(0, (i - 1) * M + j, board[i][j]);
+                    add_path(0, convert(i, j, M), board[i][j]);
                     for (pr k : go)
                     {
                         x = i + k.first, y = j + k.second;
                         if (x <= 0 || x > N || y <= 0 || y > M)
                             continue;
-                        add_path((i - 1) * M + j, (x - 1) * M + y, board[i][j]);
+                        add_path(convert(i, j, M), convert(x, y, M), board[i][j]);
                     }
                 }
             }

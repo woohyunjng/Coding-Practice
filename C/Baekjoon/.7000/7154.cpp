@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 #define int long long
-#define MAX 100000
+#define MAX 300
 
 using namespace std;
 typedef pair<int, int> pr;
@@ -8,6 +8,8 @@ typedef pair<int, int> pr;
 vector<int> arr[MAX];
 int cap[MAX][MAX], flow[MAX][MAX], cost[MAX][MAX], dp[MAX], parent[MAX];
 bool checked[MAX];
+
+int dis(pr A, pr B) { return abs(A.first - B.first) + abs(A.second - B.second); }
 
 void add_path(int A, int B, int cst, int cap_size)
 {
@@ -18,13 +20,10 @@ void add_path(int A, int B, int cst, int cap_size)
     cost[B][A] = -cst;
 
     cap[A][B] = cap_size;
-    cap[B][A] = 0;
-
     flow[A][B] = 0;
     flow[B][A] = 0;
 }
 
-// 최대 유량과 최소 비용 만
 pr minimum_cost_maximum_flow(int start, int end)
 {
     queue<int> q;
@@ -78,57 +77,46 @@ pr minimum_cost_maximum_flow(int start, int end)
     return {res, money};
 }
 
-// 최소 비용만
-int minimum_cost_flow(int start, int end)
+signed main()
 {
-    queue<int> q;
-    int val, res = LLONG_MAX, money = 0, A;
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    int N, M, K = 0, A, B;
 
     while (true)
     {
-        fill(checked, checked + end + 1, false);
-        fill(dp, dp + end + 1, LLONG_MAX);
-        fill(parent, parent + end + 1, -1);
+        cin >> N >> M;
+        if (!N || !M)
+            break;
 
-        dp[start] = 0;
-        checked[start] = true;
-        q.push(start);
+        K = N + M + 1;
 
-        while (!q.empty())
+        for (int i = 0; i <= K; i++)
+            arr[i].clear();
+
+        for (int i = 1; i <= M; i++)
+            add_path(0, i, 0, 1);
+
+        for (int i = 1; i <= N; i++)
         {
-            A = q.front();
-            checked[A] = false;
-            q.pop();
+            cin >> A;
+            add_path(M + i, K, 0, A);
+        }
 
-            for (int i : arr[A])
+        for (int i = 1; i <= M; i++)
+        {
+            cin >> A;
+            for (int j = 0; j < 4; j++)
             {
-                if (cap[A][i] - flow[A][i] <= 0 || dp[A] + cost[A][i] >= dp[i])
-                    continue;
-                dp[i] = dp[A] + cost[A][i];
-                parent[i] = A;
-                if (!checked[i])
-                {
-                    checked[i] = true;
-                    q.push(i);
-                }
+                cin >> B;
+                add_path(i, M + B + 1, -(A * 4 - j), 1);
             }
         }
 
-        if (parent[end] == -1)
-            break;
-
-        val = LLONG_MAX;
-        for (int i = end; i != start; i = parent[i])
-            val = min(val, cap[parent[i]][i] - flow[parent[i]][i]);
-
-        for (int i = end; i != start; i = parent[i])
-        {
-            money += val * cost[parent[i]][i];
-            flow[parent[i]][i] += val;
-            flow[i][parent[i]] -= val;
-        }
-        res = min(res, money);
+        pr res = minimum_cost_maximum_flow(0, K);
+        cout << -res.second << '\n';
     }
-
-    return res < LLONG_MAX ? res : 0;
+    return 0;
 }

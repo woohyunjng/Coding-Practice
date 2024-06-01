@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 #define int long long
-#define MAX 10000
+#define MAX 300
 
 using namespace std;
 
@@ -13,8 +13,6 @@ void add_path(int A, int B, int cap_size)
     arr[B].push_back(A);
 
     cap[A][B] = cap_size;
-    cap[B][A] = 0;
-
     flow[A][B] = 0;
     flow[B][A] = 0;
 }
@@ -78,4 +76,39 @@ int maximum_flow(int start, int end)
             res += val;
         }
     }
+}
+
+signed main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    int N, M, K, A, res;
+    cin >> N >> M;
+    K = N + M + 1;
+
+    for (int i = 1; i <= N; i++)
+    {
+        cin >> A;
+        add_path(0, i, A);
+    }
+
+    for (int i = 1; i <= M; i++)
+    {
+        cin >> A;
+        add_path(N + i, K, A);
+    }
+
+    for (int i = 1; i <= M; i++)
+    {
+        for (int j = 1; j <= N; j++)
+        {
+            cin >> A;
+            add_path(j, N + i, A);
+        }
+    }
+
+    res = maximum_flow(0, K);
+    cout << res;
 }
