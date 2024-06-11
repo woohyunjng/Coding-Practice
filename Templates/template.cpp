@@ -3,7 +3,7 @@
 
 using namespace std;
 typedef pair<int, int> pr;
-typedef tuple<int, int, int> tp;
+typedef array<int, 3> tp;
 
 signed main()
 {

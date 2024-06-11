@@ -3,18 +3,10 @@
 #define int long long
 
 using namespace std;
-typedef pair<int, int> pr;
+typedef array<int, 3> tp;
 
 int parent[MAX];
-
-int subst(int A, int B) { return A * MAX + B; }
-pr to_pair(int K) { return {K / MAX, K % MAX}; }
-
-void clear(int K)
-{
-    for (int i = 1; i <= K; i++)
-        parent[i] = i;
-}
+vector<tp> link;
 
 int find(int K)
 {
@@ -29,4 +21,22 @@ void uni(int A, int B)
     if (A > B)
         swap(A, B);
     parent[B] = A;
+}
+
+int mst()
+{
+    int res = 0, A, B;
+    sort(link.begin(), link.end());
+
+    for (tp i : link)
+    {
+        A = find(i[1]), B = find(i[2]);
+        if (A == B)
+            continue;
+        ;
+        uni(A, B);
+        res += i[0];
+    }
+
+    return res;
 }
