@@ -1,57 +1,70 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
+#include <bits/stdc++.h>
+#define MAX 10010
+#define int long long
+
 using namespace std;
+typedef array<int, 3> tp;
 
-int parent[10001];
+int parent[MAX];
+vector<tp> link;
 
-int find(int i)
+void clear(int K)
 {
-    if (i != parent[i])
-    {
-        parent[i] = find(parent[i]);
-    }
-    return parent[i];
-}
-
-void uni(int i, int j)
-{
-    i = find(i);
-    j = find(j);
-    if (i > j)
-        swap(i, j);
-    parent[j] = i;
-}
-
-int main()
-{
-    int V, E, A, B, C, res = 0;
-    cin >> V >> E;
-
-    vector<pair<int, pair<int, int>>> link;
-
-    for (int i = 1; i <= V; i++)
-    {
+    for (int i = 1; i <= K; i++)
         parent[i] = i;
-    }
+}
 
-    for (int i = 0; i < E; i++)
-    {
-        cin >> A >> B >> C;
-        link.push_back(make_pair(C, make_pair(A, B)));
-    }
+int find(int K)
+{
+    if (parent[K] != K)
+        parent[K] = find(parent[K]);
+    return parent[K];
+}
+
+void uni(int A, int B)
+{
+    A = find(A), B = find(B);
+    if (A > B)
+        swap(A, B);
+    parent[B] = A;
+}
+
+int mst()
+{
+    int res = 0, A, B;
     sort(link.begin(), link.end());
 
-    for (pair<int, pair<int, int>> i : link)
+    for (tp i : link)
     {
-        A = find(i.second.first);
-        B = find(i.second.second);
+        A = find(i[1]), B = find(i[2]);
         if (A == B)
             continue;
-
         uni(A, B);
-        res += i.first;
+        res += i[0];
     }
 
-    cout << res;
+    return res;
+}
+
+signed main()
+{
+
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    int V, E, A, B, C;
+    cin >> V >> E;
+
+    clear(V);
+
+    while (E--)
+    {
+        cin >> A >> B >> C;
+        link.push_back({C, A, B});
+    }
+
+    cout << mst();
+
+    return 0;
 }

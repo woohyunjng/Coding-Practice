@@ -1,9 +1,19 @@
-#include <iostream>
-#include <algorithm>
-#include <vector>
+#include <bits/stdc++.h>
+#define int long long
 using namespace std;
 
-int main()
+vector<int> compressed;
+
+void compress(vector<int> arr)
+{
+    compressed = arr;
+    sort(compressed.begin(), compressed.end());
+    compressed.erase(unique(compressed.begin(), compressed.end()), compressed.end());
+}
+
+int get_id(int A) { return lower_bound(compressed.begin(), compressed.end(), A) - compressed.begin(); }
+
+signed main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
@@ -16,10 +26,8 @@ int main()
     for (int i = 0; i < N; i++)
         cin >> X[i];
 
-    vector<int> arr(X);
-    sort(arr.begin(), arr.end());
-    arr.erase(unique(arr.begin(), arr.end()), arr.end());
+    compress(X);
 
     for (int i = 0; i < N; i++)
-        cout << lower_bound(arr.begin(), arr.end(), X[i]) - arr.begin() << ' ';
+        cout << get_id(X[i]) << ' ';
 }
