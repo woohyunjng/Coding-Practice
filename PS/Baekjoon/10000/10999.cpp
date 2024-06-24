@@ -1,106 +1,94 @@
-#include <iostream>
+#include <bits/stdc++.h>
+#define int long long
+#define MAX 1000
+
 using namespace std;
 
-long long int tree[1000001 * 4];
-long long int lazy[1000001 * 4] = {};
-long long int arr[1000001];
-int N;
+class LazyPropagition {
+  private:
+    void init(int n, int s, int e) {
+        if (s == e)
+            tree[n] = arr[s];
+        else {
+            init(n << 1, s, (s + e) >> 1);
+            init(n << 1 | 1, ((s + e) >> 1) + 1, e);
+            tree[n] = tree[n << 1] + tree[n << 1 | 1];
+        }
+    }
 
-void init(int node, int start, int end)
-{
-    if (start == end)
-    {
-        tree[node] = arr[start];
+    void lazy_update(int n, int s, int e) {
+        if (lazy[n] != 0) {
+            tree[n] += (e - s + 1) * lazy[n];
+            if (s != e) {
+                lazy[n << 1] += lazy[n];
+                lazy[n << 1 | 1] += lazy[n];
+            }
+            lazy[n] = 0;
+        }
     }
-    else
-    {
-        init(node * 2, start, (int)((start + end) / 2));
-        init(node * 2 + 1, (int)((start + end) / 2) + 1, end);
-        tree[node] = tree[node * 2] + tree[node * 2 + 1];
-    }
-}
 
-void lazy_update(int node, int start, int end)
-{
-    tree[node] += lazy[node] * (end - start + 1);
-    if (start != end)
-    {
-        lazy[node * 2] += lazy[node];
-        lazy[node * 2 + 1] += lazy[node];
+    int query(int n, int s, int e, int l, int r) {
+        lazy_update(n, s, e);
+        if (l <= s && e <= r)
+            return tree[n];
+        else if (r < s || e < l)
+            return 0;
+        else {
+            int lv = query(n << 1, s, ((s + e) >> 1), l, r);
+            int rv = query(n << 1 | 1, ((s + e) >> 1) + 1, e, l, r);
+            return lv + rv;
+        }
     }
-    lazy[node] = 0;
-}
 
-long long int update(int node, int start, int end, int left, int right, long long int value)
-{
-    lazy_update(node, start, end);
-    if (end < left || right < start)
-    {
-        return tree[node];
+    void update(int n, int s, int e, int l, int r, int val) {
+        lazy_update(n, s, e);
+        if (r < s || e < l)
+            return;
+        else if (l <= s && e <= r) {
+            lazy[n] += val;
+            lazy_update(n, s, e);
+            arr[s] += val;
+        } else {
+            update(n << 1, s, (s + e) >> 1, l, r, val);
+            update(n << 1 | 1, ((s + e) >> 1) + 1, e, l, r, val);
+            tree[n] = tree[n << 1] + tree[n << 1 | 1];
+        }
     }
-    else if (left <= start && end <= right)
-    {
-        lazy[node] += value;
-        lazy_update(node, start, end);
-        return tree[node];
-    }
-    else
-    {
-        long long int left_sum = update(node * 2, start, (int)((start + end) / 2), left, right, value);
-        long long int right_sum = update(node * 2 + 1, (int)((start + end) / 2) + 1, end, left, right, value);
-        tree[node] = left_sum + right_sum;
-        return tree[node];
-    }
-}
 
-long long int query(int node, int start, int end, int left, int right)
-{
-    lazy_update(node, start, end);
-    if (left > end || right < start)
-    {
-        return 0;
-    }
-    else if (left <= start && end <= right)
-    {
-        return tree[node];
-    }
-    else
-    {
-        long long int left_min = query(node * 2, start, (int)((start + end) / 2), left, right);
-        long long int right_min = query(node * 2 + 1, (int)((start + end) / 2) + 1, end, left, right);
-        return left_min + right_min;
-    }
-}
+  public:
+    int N, arr[MAX];
+    int tree[4 * MAX + 1], lazy[4 * MAX + 1];
 
-int main()
-{
+    LazyPropagition(int n) : N(n) {}
+
+    void init() { init(1, 1, N); }
+    int query(int pos) { return query(1, 1, N, pos, pos); }
+    int query(int l, int r) { return query(1, 1, N, l, r); }
+    void update(int l, int r, int val) { update(1, 1, N, l, r, val); }
+};
+
+signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    int M, K, a, b, c;
-    long long int d;
-
+    int N, M, K, Q, A, B, C, D;
     cin >> N >> M >> K;
+    Q = M + K;
 
-    for (int i = 0; i < N; i++)
-    {
-        cin >> arr[i];
-    }
-    init(1, 0, N - 1);
+    LazyPropagition tree(N);
+    for (int i = 1; i <= N; i++)
+        cin >> tree.arr[i];
+    tree.init();
 
-    for (int i = 0; i < M + K; i++)
-    {
-        cin >> a;
-        if (a == 1)
-        {
-            cin >> b >> c >> d;
-            update(1, 0, N - 1, --b, --c, d);
-        }
-        else
-        {
-            cin >> b >> c;
-            cout << query(1, 0, N - 1, --b, --c) << '\n';
-        }
+    while (Q--) {
+        cin >> A >> B >> C;
+        if (A == 1) {
+            cin >> D;
+            tree.update(B, C, D);
+        } else
+            cout << tree.query(B, C) << '\n';
     }
+
+    return 0;
 }
