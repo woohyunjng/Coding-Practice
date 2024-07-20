@@ -1,0 +1,239 @@
+#include <bits/stdc++.h>
+#define int long long
+#define MAX 30010
+
+using namespace std;
+typedef pair<int, int> pr;
+typedef array<int, 3> tp;
+
+class SegTree {
+  public:
+    int N, arr[MAX];
+    int tree[2 * MAX + 1];
+
+    SegTree(int n) : N(n) {}
+
+    void init() {
+        for (int i = 1; i <= N; i++)
+            tree[i + N - 1] = arr[i];
+
+        for (int i = N - 1; i > 0; --i)
+            tree[i] = tree[i << 1] + tree[i << 1 | 1];
+    }
+
+    int query(int l, int r) {
+        int res = 0;
+        for (l += N - 1, r += N; l < r; l >>= 1, r >>= 1) {
+            if (l & 1)
+                res = res + tree[l++];
+            if (r & 1)
+                res = res + tree[--r];
+        }
+        return res;
+    }
+
+    void update(int pos, int val) {
+        for (tree[pos += N - 1] = val; pos > 1; pos >>= 1)
+            tree[pos >> 1] = tree[pos] + tree[pos ^ 1];
+    }
+};
+
+class HLD {
+  private:
+    int pv;
+    bool checked[MAX];
+
+    void dfs(int cur) {
+        in[cur] = ++pv;
+        seg.arr[pv] = val[cur];
+        for (int i : child[cur]) {
+            top[i] = i == child[cur][0] ? top[cur] : i;
+            dfs(i);
+        }
+        out[cur] = pv;
+    }
+
+  public:
+    SegTree seg;
+
+    vector<int> arr[MAX], child[MAX];
+    int N, root, parent[MAX], depth[MAX], sz[MAX], top[MAX], in[MAX], out[MAX], val[MAX];
+
+    HLD(int n, int rt = 1) : N(n), pv(0), seg(n), root(rt) {}
+
+    void set_root(int rt) {
+        root = rt;
+    }
+
+    void add_edge(int u, int v) {
+        arr[u].push_back(v);
+        arr[v].push_back(u);
+    }
+
+    void set_node(int n, int v) {
+        val[n] = v;
+    }
+
+    void build_tree() {
+        int cur;
+
+        queue<int> q;
+        stack<int> st;
+
+        q.push(root);
+        checked[root] = true;
+
+        while (!q.empty()) {
+            cur = q.front(), q.pop();
+            st.push(cur);
+
+            for (int i : arr[cur]) {
+                if (checked[i])
+                    continue;
+                checked[i] = true;
+                parent[i] = cur;
+                depth[i] = depth[cur] + 1;
+                child[cur].push_back(i);
+                q.push(i);
+            }
+        }
+
+        while (!st.empty()) {
+            cur = st.top(), st.pop();
+            sz[cur] = 1;
+            for (int i = 0; i < child[cur].size(); i++) {
+                sz[cur] += sz[i];
+                if (sz[child[cur][i]] > sz[child[cur][0]])
+                    swap(child[cur][i], child[cur][0]);
+            }
+        }
+
+        dfs(root);
+    }
+
+    void build_seg() {
+        for (int i = 1; i <= N; i++)
+            seg.arr[in[i]] = val[i];
+        seg.init();
+    }
+
+    void update(int pos, int val) {
+        seg.update(in[pos], val);
+    }
+
+    int query(int u, int v) {
+        int res = 0;
+        while (top[u] ^ top[v]) {
+            if (depth[top[u]] < depth[top[v]])
+                swap(u, v);
+            res = res + seg.query(in[top[u]], in[u]);
+            u = parent[top[u]];
+        }
+        if (depth[u] > depth[v])
+            swap(u, v);
+        res = res + seg.query(in[u], in[v]);
+        return res;
+    }
+
+    int lca(int u, int v) {
+        while (top[u] ^ top[v]) {
+            if (depth[top[u]] < depth[top[v]])
+                swap(u, v);
+            u = parent[top[u]];
+        }
+        return depth[u] < depth[v] ? u : v;
+    }
+};
+
+class UnionFind {
+  private:
+    int uf_parent[MAX];
+
+  public:
+    UnionFind(int N) { clear(N); }
+
+    int find(int K) {
+        if (uf_parent[K] != K)
+            uf_parent[K] = find(uf_parent[K]);
+        return uf_parent[K];
+    }
+
+    void uni(int A, int B) {
+        A = find(A), B = find(B);
+        if (A > B)
+            swap(A, B);
+        uf_parent[B] = A;
+    }
+
+    void clear(int N) {
+        for (int i = 1; i <= N; i++)
+            uf_parent[i] = i;
+    }
+};
+
+vector<tp> queries;
+
+signed main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    int N, Q, A, B;
+    string T;
+
+    cin >> N;
+
+    UnionFind uf(N);
+    HLD hld(N);
+
+    for (int i = 1; i <= N; i++) {
+        cin >> A;
+        hld.set_node(i, A);
+    }
+
+    cin >> Q;
+    for (int i = 1; i <= Q; i++) {
+        cin >> T >> A >> B;
+        if (T == "bridge") {
+            if (uf.find(A) == uf.find(B))
+                queries.push_back({0, A, B});
+            else {
+                uf.uni(A, B);
+                queries.push_back({1, A, B});
+                hld.add_edge(A, B);
+            }
+        } else if (T == "penguins")
+            queries.push_back({2, A, B});
+        else
+            queries.push_back({3, A, B});
+    }
+
+    for (int i = 1; i <= N; i++) {
+        if (uf.find(i) != 1) {
+            uf.uni(1, i);
+            hld.add_edge(1, i);
+        }
+    }
+
+    hld.build_tree();
+    hld.build_seg();
+    uf.clear(N);
+
+    for (tp i : queries) {
+        if (i[0] == 0)
+            cout << "no\n";
+        else if (i[0] == 1) {
+            cout << "yes\n";
+            uf.uni(i[1], i[2]);
+        } else if (i[0] == 2)
+            hld.update(i[1], i[2]);
+        else {
+            if (uf.find(i[1]) != uf.find(i[2]))
+                cout << "impossible\n";
+            else
+                cout << hld.query(i[1], i[2]) << '\n';
+        }
+    }
+
+    return 0;
+}
