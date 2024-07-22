@@ -1,14 +1,14 @@
 #include <bits/stdc++.h>
 #define int long long
-#define MAX 100100
-#define SQRT_MAX 100100
 
 using namespace std;
 
 class SqrtDecomposition {
   public:
-    int N, S, arr[MAX] = {}, sqrt_arr[SQRT_MAX] = {}, size;
-    SqrtDecomposition(int n) : N(n) {}
+    int N, S, size;
+    vector<int> arr, sqrt_arr;
+
+    SqrtDecomposition(int n) : N(n), arr(n + 1), sqrt_arr(n + 1) {}
 
     void init() {
         S = sqrt(N);

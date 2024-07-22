@@ -1,21 +1,20 @@
 #include <bits/stdc++.h>
-#define MAX 1000
 #define int long long
 
 using namespace std;
 typedef pair<int, int> pr;
 typedef array<int, 3> tp;
 
-int subst(int A, int B) { return A * MAX + B; }
-pr to_pair(int K) { return {K / MAX, K % MAX}; }
+int subst(int A, int B, int N) { return A * (N + 1) + B; }
+pr to_pair(int K, int N) { return {K / (N + 1), K % (N + 1)}; }
 
 // 경로 압축
 class UnionFind {
   private:
-    int uf_parent[MAX];
+    vector<int> uf_parent;
 
   public:
-    UnionFind(int N) { clear(N); }
+    UnionFind(int N) : uf_parent(N + 1) { clear(N); }
 
     int find(int K) {
         if (uf_parent[K] != K)

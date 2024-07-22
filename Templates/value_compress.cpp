@@ -4,8 +4,7 @@ using namespace std;
 
 vector<int> compressed;
 
-void compress(vector<int> arr)
-{
+void compress(vector<int> arr) {
     compressed = arr;
     sort(compressed.begin(), compressed.end());
     compressed.erase(unique(compressed.begin(), compressed.end()), compressed.end());

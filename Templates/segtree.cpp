@@ -2,6 +2,8 @@
 #define int long long
 #define MAX 1000000
 
+using namespace std;
+
 class Node {
   public:
     int val = 0;
@@ -16,10 +18,11 @@ class Node {
 
 class SegTree {
   public:
-    int N, arr[MAX];
-    Node tree[2 * MAX + 1];
+    int N;
+    vector<int> arr;
+    vector<Node> tree;
 
-    SegTree(int n) : N(n) {}
+    SegTree(int n) : N(n), arr(n + 1), tree(n * 2 + 1) {}
 
     void init() {
         for (int i = 1; i <= N; i++)
@@ -28,6 +31,7 @@ class SegTree {
         for (int i = N - 1; i > 0; --i)
             tree[i] = tree[i << 1] + tree[i << 1 | 1];
     }
+
     Node query(int l, int r) {
         Node res;
         for (l += N - 1, r += N; l < r; l >>= 1, r >>= 1) {
@@ -85,10 +89,11 @@ class SegTree {
     }
 
   public:
-    int N, arr[MAX];
-    Node tree[4 * MAX + 1];
+    int N;
+    vector<int> arr;
+    vector<Node> tree;
 
-    SegTree(int n) : N(n) {}
+    SegTree(int n) : N(n), arr(n + 1), tree(n * 4 + 1) {}
 
     void init() { init(1, 1, N); }
     Node query(int pos) { return query(1, 1, N, pos, pos); }

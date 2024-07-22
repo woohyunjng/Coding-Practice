@@ -2,11 +2,9 @@
 #define int long long
 #define MOD 1000000007
 
-int fpow(int N, int K)
-{
+int fpow(int N, int K) {
     int res = 1;
-    while (K)
-    {
+    while (K) {
         if (K & 1)
             res = res * N % MOD;
         K >>= 1;

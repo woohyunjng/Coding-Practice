@@ -3,11 +3,9 @@
 
 using namespace std;
 
-int euler_phi(int N)
-{
+int euler_phi(int N) {
     int res = N;
-    for (int i = 2; i * i <= N; i++)
-    {
+    for (int i = 2; i * i <= N; i++) {
         if (N % i)
             continue;
         while (!(N % i))
@@ -16,8 +14,7 @@ int euler_phi(int N)
         res *= i - 1;
     }
 
-    if (N != 1)
-    {
+    if (N != 1) {
         res /= N;
         res *= N - 1;
     }
