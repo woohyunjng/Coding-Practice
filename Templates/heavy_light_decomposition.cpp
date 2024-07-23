@@ -8,10 +8,11 @@ typedef array<int, 3> tp;
 
 class SegTree {
   public:
-    int N, arr[MAX];
-    int tree[2 * MAX + 1];
+    int N;
+    vector<int> arr;
+    vector<int> tree;
 
-    SegTree(int n) : N(n) {}
+    SegTree(int n) : N(n), arr(n + 1), tree(2 * n + 1) {}
 
     void init() {
         for (int i = 1; i <= N; i++)
@@ -90,10 +91,10 @@ class LazyPropagition {
     }
 
   public:
-    int N, arr[MAX];
-    int tree[4 * MAX + 1], lazy[4 * MAX + 1];
+    int N;
+    vector<int> arr, tree, lazy;
 
-    LazyPropagition(int n) : N(n) {}
+    LazyPropagition(int n) : N(n), arr(n + 1), tree(4 * n + 1), lazy(4 * n + 1) {}
 
     void init() { init(1, 1, N); }
     int query(int pos) { return query(1, 1, N, pos, pos); }
@@ -104,7 +105,7 @@ class LazyPropagition {
 class HLD {
   private:
     int pv;
-    bool checked[MAX];
+    vector<bool> checked;
 
     void dfs(int cur) {
         in[cur] = ++pv;
@@ -119,10 +120,11 @@ class HLD {
   public:
     SegTree seg;
 
-    vector<int> arr[MAX], child[MAX];
-    int N, root, parent[MAX], depth[MAX], sz[MAX], top[MAX], in[MAX], out[MAX], val[MAX];
+    vector<vector<int>> arr, child;
+    vector<int> parent, depth, sz, top, in, out, val;
+    int N, root;
 
-    HLD(int n, int rt = 1) : N(n), pv(0), seg(n), root(rt) {}
+    HLD(int n, int rt = 1) : N(n), pv(0), seg(n), root(rt), arr(n + 1), child(n + 1), parent(n + 1), depth(n + 1), sz(n + 1), top(n + 1), in(n + 1), out(n + 1), val(n + 1), checked(n + 1) {}
 
     void add_edge(int u, int v) {
         arr[u].push_back(v);
