@@ -1,45 +1,35 @@
-#include <iostream>
-#include <vector>
-#include <utility>
-#include <queue>
+#include <bits/stdc++.h>
+#define int long long
+#define MAX 200100
+
 using namespace std;
+typedef pair<int, int> pr;
+typedef array<int, 3> tp;
 
-int main() {
+bool current[MAX], checked[MAX];
+vector<int> arr;
+
+signed main() {
     ios_base::sync_with_stdio(false);
-    cin.tie(nullptr);
-    cout.tie(nullptr);
+    cin.tie(0), cout.tie(0);
 
-    int N, M, K, S, a, U, V, W, C;
+    int N, M, K, S, res = 0, A, B, C, D;
+
     cin >> N >> M >> K >> S;
-
-    bool item[K + 1] = {}, rode_item[M];
-    vector<int> rode[M];
-    vector<pair<int, int>> arr[N + 1];
-
-    for (int i = 0 ; i < S ; i ++) {
-        cin >> a;
-        item[a] = true;
+    for (int i = 1; i <= S; i++) {
+        cin >> A;
+        current[A] = true;
     }
 
-    for (int i = 0 ; i < M ; i ++) {
-        cin >> U >> V >> W >> C;
-        arr[U].push_back(make_pair(V, i));
-        arr[V].push_back(make_pair(U, i));
-        rode_item[i] = W;
-
-        for (int j = 0 ; j < C ; j ++) {
-            cin >> a;
-            rode[i].push_back(a);
-        }
+    while (M--) {
+        cin >> A >> B >> C >> D;
     }
 
     queue<int> q;
     q.push(1);
+    checked[1] = true;
 
-    while (!q.empty()) {
-        p = q.top();
-        q.pop();
+    cout << res;
 
-
-    }
+    return 0;
 }
