@@ -163,7 +163,7 @@ class HLD {
             cur = st.top(), st.pop();
             sz[cur] = 1;
             for (int i = 0; i < child[cur].size(); i++) {
-                sz[cur] += sz[i];
+                sz[cur] += sz[child[cur][i]];
                 if (sz[child[cur][i]] > sz[child[cur][0]])
                     swap(child[cur][i], child[cur][0]);
             }
@@ -266,7 +266,7 @@ class LazyHLD {
             cur = st.top(), st.pop();
             sz[cur] = 1;
             for (int i = 0; i < child[cur].size(); i++) {
-                sz[cur] += sz[i];
+                sz[cur] += sz[child[cur[i]]];
                 if (sz[child[cur][i]] > sz[child[cur][0]])
                     swap(child[cur][i], child[cur][0]);
             }
