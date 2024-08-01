@@ -1,6 +1,5 @@
 #include <bits/stdc++.h>
 #define int long long
-#define MAX 2001
 
 using namespace std;
 typedef pair<int, int> pr;
@@ -8,10 +7,10 @@ typedef array<int, 3> tp;
 
 class SegTree {
   public:
-    int N, arr[MAX];
-    int tree[2 * MAX + 1];
+    int N;
+    vector<int> arr, tree;
 
-    SegTree(int n) : N(n) {}
+    SegTree(int n) : N(n), arr(n + 1), tree(n * 2 + 1) {}
 
     void init() {
         for (int i = 1; i <= N; i++)
@@ -41,7 +40,7 @@ class SegTree {
 class HLD {
   private:
     int pv;
-    bool checked[MAX];
+    vector<bool> checked;
 
     void dfs(int cur) {
         in[cur] = ++pv;
@@ -56,10 +55,12 @@ class HLD {
   public:
     SegTree seg;
 
-    vector<int> arr[MAX], child[MAX];
-    int N, root, parent[MAX], depth[MAX], sz[MAX], top[MAX], in[MAX], out[MAX], val[MAX];
+    int N, root;
 
-    HLD(int n, int rt = 1) : N(n), pv(0), seg(n), root(rt) {}
+    vector<int> parent, depth, sz, in, out, top, val;
+    vector<vector<int>> arr, child;
+
+    HLD(int n, int rt = 1) : N(n), root(rt), pv(0), parent(n + 1), depth(n + 1), sz(n + 1), in(n + 1), out(n + 1), top(n + 1), val(n + 1), arr(n + 1), child(n + 1), checked(n + 1), seg(n) {}
 
     void add_edge(int u, int v) {
         arr[u].push_back(v);
@@ -98,7 +99,7 @@ class HLD {
             cur = st.top(), st.pop();
             sz[cur] = 1;
             for (int i = 0; i < child[cur].size(); i++) {
-                sz[cur] += sz[i];
+                sz[cur] += sz[child[cur][i]];
                 if (sz[child[cur][i]] > sz[child[cur][0]])
                     swap(child[cur][i], child[cur][0]);
             }
