@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 #define int long long
-#define MAX 10000
+#define MAX 1001
 #define INF 0x7f7f7f7f7f7f7f7f
 
 using namespace std;
@@ -72,23 +72,56 @@ class BipartiteMatching {
     }
 };
 
+bool arr[MAX][MAX];
+int parent_X[MAX][MAX], parent_Y[MAX][MAX];
+
 signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0), cout.tie(0);
 
-    int N, M, K, X;
+    int N, M, X, Y;
     cin >> N >> M;
 
-    BipartiteMatching bp(N, M);
     for (int i = 1; i <= N; i++) {
-        cin >> K;
-        while (K--) {
-            cin >> X;
-            bp.add_path(i, X);
+        for (int j = 1; j <= N; j++)
+            arr[i][j] = true;
+    }
+
+    while (M--) {
+        cin >> X >> Y;
+        arr[X][Y] = false;
+    }
+
+    X = 0, Y = 0;
+    for (int i = 1; i <= N; i++) {
+        for (int j = 1; j <= N; j++) {
+            if (!arr[i][j])
+                continue;
+            if (arr[i - 1][j - 1])
+                parent_X[i][j] = parent_X[i - 1][j - 1];
+            else
+                parent_X[i][j] = ++X;
+        }
+        for (int j = N; j >= 1; j--) {
+            if (!arr[i][j])
+                continue;
+            if (arr[i - 1][j + 1])
+                parent_Y[i][j] = parent_Y[i - 1][j + 1];
+            else
+                parent_Y[i][j] = ++Y;
         }
     }
 
-    cout << bp.run();
+    BipartiteMatching bm(X, Y);
+    for (int i = 1; i <= N; i++) {
+        for (int j = 1; j <= N; j++) {
+            if (!arr[i][j])
+                continue;
+            bm.add_path(parent_X[i][j], parent_Y[i][j]);
+        }
+    }
+
+    cout << bm.run();
 
     return 0;
 }
