@@ -1,8 +1,10 @@
 #include <bits/stdc++.h>
 #define int long long
+
 #define MAX 200100
-#define INF 0x7f7f7f7f7f7f7f7f
 #define MOD 1000000007
+#define INF 0x7f7f7f7f7f7f7f7f
+#define endl '\n'
 
 using namespace std;
 typedef pair<int, int> pr;

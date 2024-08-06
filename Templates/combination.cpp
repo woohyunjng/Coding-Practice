@@ -7,7 +7,7 @@ using namespace std;
 typedef pair<int, int> pr;
 typedef array<int, 3> tp;
 
-int fac[MAX], fac_cur;
+int fac[MAX], inv_fac[MAX];
 
 int fpow(int N, int K) {
     int res = 1;
@@ -36,20 +36,17 @@ int modular_inverse(int K, int X) {
     return (res[1] % X + X) % X;
 }
 
-int factorial(int N) {
-    if (fac[N])
-        return fac[N];
-    if (!fac_cur)
-        fac[0] = 1, fac_cur = 1;
-
-    for (int i = fac_cur; i <= N; i++)
+void init(int L) {
+    fac[0] = 1;
+    for (int i = 1; i <= L; i++)
         fac[i] = fac[i - 1] * i % MOD;
-    fac_cur = N;
-    return fac[N];
+    inv_fac[L] = fpow(fac[L], MOD - 2);
+    for (int i = L - 1; i >= 0; i--)
+        inv_fac[i] = inv_fac[i + 1] * (i + 1) % MOD;
 }
 
 int comb(int A, int B) {
-    int X = factorial(A), Y, Z;
-    Y = factorial(B), Z = factorial(A - B);
-    return X * modular_inverse(Y, MOD) % MOD * modular_inverse(Z, MOD) % MOD;
+    int X = fac[A], Y, Z;
+    Y = fac[B], Z = fac[A - B];
+    return X * prime_inverse(Y, MOD) % MOD * prime_inverse(Z, MOD) % MOD;
 }
