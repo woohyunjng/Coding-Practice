@@ -1,40 +1,43 @@
 #include <bits/stdc++.h>
 #define int long long
-#define MAX 100100
-#define SQRT_MAX 100100
+#define MAX 1000000
+#define INF 0x7f7f7f7f7f7f7f7f
 
 using namespace std;
 
-class SqrtDecomposition {
+class FenwickTree {
   public:
-    int N, S, arr[MAX] = {}, sqrt_arr[SQRT_MAX] = {}, size;
-    SqrtDecomposition(int n) : N(n) {}
+    int N;
+    vector<int> arr, tree;
 
-    void init() {
-        S = sqrt(N);
-        size = N / S;
-        if (N % S)
-            size++;
+    FenwickTree(int n) : N(n), arr(n + 1, 0), tree(n + 1, 0) {}
 
-        for (int i = 1; i <= N; i++)
-            sqrt_arr[i / S] += arr[i];
+    void build() {
+        for (int i = 1; i <= N; i++) {
+            tree[i] += arr[i];
+            if (i + (i & -i) <= N)
+                tree[i + (i & -i)] += tree[i];
+        }
     }
 
-    void update(int pos, int val) {
-        sqrt_arr[pos / S] += val - arr[pos];
-        arr[pos] = val;
+    void update(int n, int val) {
+        arr[n] += val;
+        while (n <= N) {
+            tree[n] += val;
+            n += n & -n;
+        }
     }
 
-    int query(int l, int r) {
+    int query(int n) {
         int res = 0;
-        for (; l % S && l <= r; l++)
-            res += arr[l];
-        for (; (r + 1) % S && l <= r; r--)
-            res += arr[r];
-        for (; l <= r; l += S)
-            res += sqrt_arr[l / S];
+        while (n) {
+            res += tree[n];
+            n -= n & -n;
+        }
         return res;
     }
+
+    int query(int l, int r) { return query(r) - query(l - 1); }
 };
 
 signed main() {
@@ -42,20 +45,20 @@ signed main() {
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    int N, M, K, S, sz, Q, A, B, C, B_group, C_group, res;
+    int N, M, K, Q, A, B, C;
     cin >> N >> M >> K;
-    SqrtDecomposition sd(N);
-
-    for (int i = 1; i <= N; i++)
-        cin >> sd.arr[i];
-    sd.init();
-
     Q = M + K;
+
+    FenwickTree tree(N);
+    for (int i = 1; i <= N; i++)
+        cin >> tree.arr[i];
+    tree.build();
+
     while (Q--) {
         cin >> A >> B >> C;
         if (A == 1)
-            sd.update(B, C);
+            tree.update(B, C - tree.arr[B]);
         else
-            cout << sd.query(B, C) << '\n';
+            cout << tree.query(B, C) << '\n';
     }
 }
