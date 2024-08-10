@@ -57,9 +57,9 @@ class LazyPropagition {
 
   public:
     int N, arr[MAX];
-    int tree[4 * MAX + 1], lazy[4 * MAX + 1];
+    vector<int> arr, tree, lazy;
 
-    LazyPropagition(int n) : N(n) {}
+    LazyPropagition(int n) : N(n), arr(n + 1, 0), tree(4 * n + 1, 0), lazy(4 * n + 1, 0) {}
 
     void init() { init(1, 1, N); }
     int query(int pos) { return query(1, 1, N, pos, pos); }
