@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 #define int long long
 
-#define MAX 600
+#define MAX 3100
 #define MOD 1000000007
 #define INF 0x7f7f7f7f7f7f7f7f
 #define endl '\n'
@@ -12,7 +12,7 @@ typedef array<int, 3> tp;
 
 vector<int> arr[MAX];
 bool checked[MAX];
-int depth[MAX];
+int depth[MAX], cnt[MAX];
 
 signed main() {
     ios_base::sync_with_stdio(false);
@@ -45,6 +45,7 @@ signed main() {
                     continue;
                 if (checked[j]) {
                     res = min(res, depth[K.first] + depth[j] - 1);
+                    cnt[depth[K.first] + depth[j] - 1]++;
                     continue;
                 }
 
@@ -55,7 +56,7 @@ signed main() {
         }
     }
 
-    cout << res;
+    cout << cnt[res] / (2 * res);
 
     return 0;
 }
