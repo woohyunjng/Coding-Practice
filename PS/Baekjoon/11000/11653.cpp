@@ -29,18 +29,14 @@ signed main() {
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    int N, K;
+    int N;
     cin >> N;
 
-    linear_sieve(5000000);
+    linear_sieve(N);
 
-    for (int i = 1; i <= N; i++) {
-        cin >> K;
-        while (K > 1) {
-            cout << min_prime_factor[K] << ' ';
-            K /= min_prime_factor[K];
-        }
-        cout << '\n';
+    while (N > 1) {
+        cout << min_prime_factor[N] << '\n';
+        N /= min_prime_factor[N];
     }
 
     return 0;
