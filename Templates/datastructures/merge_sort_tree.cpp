@@ -1,11 +1,3 @@
-#include <bits/stdc++.h>
-#define int long long
-#define MAX 1000000
-
-using namespace std;
-
-// 비재귀
-
 class MergeSortTree {
   public:
     int N;

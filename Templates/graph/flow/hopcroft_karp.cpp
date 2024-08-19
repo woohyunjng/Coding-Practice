@@ -1,12 +1,3 @@
-#include <bits/stdc++.h>
-#define int long long
-#define MAX 10000
-#define MAX_VAL 100
-#define INF 0x7f7f7f7f7f7f7f7f
-
-using namespace std;
-typedef pair<int, int> pr;
-
 class BipartiteMatching {
   private:
     int level[MAX];

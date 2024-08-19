@@ -1,7 +1,3 @@
-#include <bits/stdc++.h>
-#define int long long
-using namespace std;
-
 int LIS(vector<int> arr) {
     vector<int> X, Y;
 

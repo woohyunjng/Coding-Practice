@@ -1,9 +1,3 @@
-#include <bits/stdc++.h>
-#define int long long
-#define MAX 10000000
-
-using namespace std;
-
 int min_prime_factor[MAX + 1];
 vector<int> primes;
 

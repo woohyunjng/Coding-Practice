@@ -1,10 +1,3 @@
-#include <bits/stdc++.h>
-#define int long long
-
-using namespace std;
-typedef pair<int, int> pr;
-typedef array<int, 3> tp;
-
 int subst(int A, int B, int N) { return A * (N + 1) + B; }
 pr to_pair(int K, int N) { return {K / (N + 1), K % (N + 1)}; }
 

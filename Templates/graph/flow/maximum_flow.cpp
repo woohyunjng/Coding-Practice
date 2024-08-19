@@ -1,9 +1,3 @@
-#include <bits/stdc++.h>
-#define int long long
-#define MAX 10000
-
-using namespace std;
-
 class MaximumFlow {
   private:
     int level[MAX], work[MAX];

@@ -1,8 +1,3 @@
-#include <bits/stdc++.h>
-#define int long long
-
-using namespace std;
-
 vector<bool> get_primes(int N) {
     vector<bool> primes(N + 1);
     fill(primes.begin(), primes.end(), true);

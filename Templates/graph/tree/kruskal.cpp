@@ -1,10 +1,3 @@
-#include <bits/stdc++.h>
-#define MAX 1000
-#define int long long
-
-using namespace std;
-typedef array<int, 3> tp;
-
 int parent[MAX];
 vector<tp> link;
 

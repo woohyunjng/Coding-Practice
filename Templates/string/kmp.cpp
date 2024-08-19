@@ -1,7 +1,3 @@
-#include <bits/stdc++.h>
-#define int long long
-using namespace std;
-
 vector<int> get_pi(string P) {
     int size = P.size(), j = 0;
     vector<int> pi(size, 0);

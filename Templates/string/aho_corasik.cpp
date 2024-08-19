@@ -1,6 +1,3 @@
-#include <bits/stdc++.h>
-using namespace std;
-
 struct Node {
     int children[26];
     int pi = 0;

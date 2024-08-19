@@ -1,8 +1,3 @@
-#include <bits/stdc++.h>
-#define int long long
-
-using namespace std;
-
 int euler_phi(int N) {
     int res = N;
     for (int i = 2; i * i <= N; i++) {

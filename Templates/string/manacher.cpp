@@ -1,8 +1,3 @@
-#include <bits/stdc++.h>
-#define int long long
-
-using namespace std;
-
 class Manacher {
   public:
     string S, K;

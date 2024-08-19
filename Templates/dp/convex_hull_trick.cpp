@@ -1,13 +1,3 @@
-#include <bits/stdc++.h>
-#define int long long
-#define MAX 100100
-#define INF 0x7f7f7f7f7f7f7f7f
-#define MOD 1000000007
-
-using namespace std;
-typedef pair<int, int> pr;
-typedef array<int, 3> tp;
-
 // X 좌표 단조 증가
 class ConvexHullTrick {
   public:

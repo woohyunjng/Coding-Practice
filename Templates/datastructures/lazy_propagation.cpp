@@ -1,9 +1,3 @@
-#include <bits/stdc++.h>
-#define int long long
-#define MAX 1000
-
-using namespace std;
-
 class LazyPropagition {
   private:
     void init(int n, int s, int e) {

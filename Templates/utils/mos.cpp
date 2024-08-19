@@ -1,11 +1,3 @@
-#include <bits/stdc++.h>
-#define int long long
-#define MAX 100010
-
-using namespace std;
-typedef pair<int, int> pr;
-typedef array<int, 3> tp;
-
 int ans[MAX];
 
 signed main() {

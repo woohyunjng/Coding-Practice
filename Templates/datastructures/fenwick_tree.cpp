@@ -1,10 +1,3 @@
-#include <bits/stdc++.h>
-#define int long long
-#define MAX 1000000
-#define INF 0x7f7f7f7f7f7f7f7f
-
-using namespace std;
-
 class FenwickTree {
   public:
     int N;

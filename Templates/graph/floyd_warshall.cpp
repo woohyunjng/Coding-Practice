@@ -1,9 +1,3 @@
-#include <bits/stdc++.h>
-#define int long long
-#define MAX 510
-
-using namespace std;
-
 int V;
 int dis[MAX][MAX];
 

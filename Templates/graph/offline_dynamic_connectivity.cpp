@@ -1,12 +1,3 @@
-#include <bits/stdc++.h>
-#define MAX 1001
-#define int long long
-
-using namespace std;
-typedef pair<int, int> pr;
-typedef array<int, 3> tp;
-typedef array<int, 4> ftp;
-
 class UnionFind {
   private:
     vector<int> uf_parent, rank;

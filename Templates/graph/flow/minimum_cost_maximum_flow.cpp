@@ -1,10 +1,3 @@
-#include <bits/stdc++.h>
-#define int long long
-#define MAX 100000
-
-using namespace std;
-typedef pair<int, int> pr;
-
 class MinimumCostMaximumFlow {
   private:
     int dp[MAX], parent[MAX];

@@ -1,11 +1,3 @@
-#include <bits/stdc++.h>
-#define int long long
-#define MAX 100100
-
-using namespace std;
-typedef pair<int, int> pr;
-typedef array<int, 3> tp;
-
 vector<int> arr[MAX];
 int sz[MAX], C[MAX];
 bool checked[MAX];

@@ -1,11 +1,3 @@
-#include <bits/stdc++.h>
-#define int long long
-#define MOD 1000000007
-
-using namespace std;
-typedef pair<int, int> pr;
-typedef array<int, 3> tp;
-
 int fpow(int N, int K) {
     int res = 1;
     while (K) {

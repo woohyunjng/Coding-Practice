@@ -1,10 +1,3 @@
-#include <bits/stdc++.h>
-#define MAX 1000
-#define int long long
-
-using namespace std;
-typedef pair<int, int> pr;
-
 int uf_parent[MAX];
 set<int> S[MAX];
 

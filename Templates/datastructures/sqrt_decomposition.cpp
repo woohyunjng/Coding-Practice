@@ -1,8 +1,3 @@
-#include <bits/stdc++.h>
-#define int long long
-
-using namespace std;
-
 class SqrtDecomposition {
   public:
     int N, S, size;

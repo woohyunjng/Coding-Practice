@@ -1,11 +1,3 @@
-#include <bits/stdc++.h>
-#define int long long
-#define MAX 100100
-#define MAX_LOG 18
-
-using namespace std;
-typedef pair<int, int> pr;
-
 int N, parent[MAX][MAX_LOG], depth[MAX];
 vector<int> arr[MAX];
 bool checked[MAX];

@@ -1,7 +1,3 @@
-#include <bits/stdc++.h>
-#define int long long
-using namespace std;
-
 int base[3] = {2, 7, 61};
 // int base[12] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37};
 

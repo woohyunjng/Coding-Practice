@@ -1,9 +1,3 @@
-#include <bits/stdc++.h>
-#define int long long
-
-using namespace std;
-typedef pair<int, int> pr;
-
 int CCW(pr A, pr B, pr C) { // A-B-C 양수 반시계 / 0 일직선 / 음수 시계
     int val = (B.first - A.first) * (C.second - A.second) - (C.first - A.first) * (B.second - A.second);
     if (val > 0)

@@ -1,9 +1,3 @@
-#include <bits/stdc++.h>
-#define int long long
-#define MAX 10010
-
-using namespace std;
-
 vector<int> arr[MAX], rvt_arr[MAX], scc[MAX];
 stack<int> st;
 bool checked[MAX];

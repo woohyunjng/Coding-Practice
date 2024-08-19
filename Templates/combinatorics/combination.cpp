@@ -1,12 +1,3 @@
-#include <bits/stdc++.h>
-#define int long long
-#define MAX 100100
-#define MOD 1000000007
-
-using namespace std;
-typedef pair<int, int> pr;
-typedef array<int, 3> tp;
-
 int fac[MAX], inv_fac[MAX];
 
 int fpow(int N, int K) {

@@ -1,10 +1,3 @@
-#include <bits/stdc++.h>
-#define int long long
-#define MAX 1000000
-
-using namespace std;
-typedef pair<int, int> pr;
-
 int V;
 vector<pr> arr[MAX];
 
