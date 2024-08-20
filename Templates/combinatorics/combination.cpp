@@ -37,7 +37,6 @@ void init(int L) {
 }
 
 int comb(int A, int B) {
-    int X = fac[A], Y, Z;
-    Y = fac[B], Z = fac[A - B];
-    return X * prime_inverse(Y, MOD) % MOD * prime_inverse(Z, MOD) % MOD;
+    int X = fac[A], Y = inv_fac[B], Z = inv_fac[A - B];
+    return X * Y % MOD * Z % MOD;
 }
