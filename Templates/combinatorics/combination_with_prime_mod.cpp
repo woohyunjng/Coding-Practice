@@ -1,5 +1,3 @@
-int fac[MAX], inv_fac[MAX];
-
 int fpow(int N, int K) {
     int res = 1;
     while (K) {
@@ -11,6 +9,8 @@ int fpow(int N, int K) {
     return res;
 }
 
+int fac[MAX], inv_fac[MAX];
+
 void init(int L) {
     fac[0] = 1;
     for (int i = 1; i <= L; i++)
@@ -21,6 +21,8 @@ void init(int L) {
 }
 
 int comb(int A, int B) {
+    if (A < B || A < 0 || B < 0)
+        return 0;
     int X = fac[A], Y = inv_fac[B], Z = inv_fac[A - B];
     return X * Y % MOD * Z % MOD;
 }
