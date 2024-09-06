@@ -1,57 +1,72 @@
-#include <iostream>
-#include <vector>
-#include <utility>
-#define MAX_INT 0x3f3f3f3f3f3f3f3f
+#include <bits/stdc++.h>
+#define int long long
+
+#define MAX 1100
+#define MOD 1000000007
+#define INF 0x7f7f7f7f7f7f7f7f
+#define endl '\n'
+
 using namespace std;
+typedef pair<int, int> pr;
+typedef array<int, 3> tp;
 
-typedef pair<pair<int, int>, long long> pl;
+int N;
+vector<pr> arr[MAX];
+int dis[MAX], cnt[MAX];
+bool checked[MAX];
 
-int main()
-{
+signed main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0), cout.tie(0);
+
     int N, ML, MD, A, B, D;
     bool cycle = false;
 
-    vector<pl> arr;
-
     cin >> N >> ML >> MD;
-    long long min_dis[N + 1];
 
-    for (int i = 1; i < N; i++)
-    {
-        min_dis[i + 1] = MAX_INT;
-        arr.push_back(make_pair(make_pair(i + 1, i), 0));
-    }
-    min_dis[1] = 0;
-
-    while (ML--)
-    {
+    while (ML--) {
         cin >> A >> B >> D;
-        arr.push_back(make_pair(make_pair(A, B), D));
+        arr[A].push_back({B, D});
     }
 
-    while (MD--)
-    {
+    while (MD--) {
         cin >> A >> B >> D;
-        arr.push_back(make_pair(make_pair(B, A), -D));
+        arr[B].push_back({A, -D});
     }
 
-    for (int i = 0; i < N; i++)
-    {
-        for (pl j : arr)
-        {
-            if (min_dis[j.first.first] != MAX_INT && j.second != MAX_INT && j.second + min_dis[j.first.first] < min_dis[j.first.second])
-            {
-                min_dis[j.first.second] = j.second + min_dis[j.first.first];
-                if (i == N - 1)
-                    cycle = true;
+    fill(dis, dis + N + 1, INF);
+    dis[1] = 0;
+
+    queue<int> q;
+    q.push(1);
+    checked[1] = true;
+
+    while (!q.empty()) {
+        A = q.front(), q.pop();
+        checked[A] = false;
+
+        if (++cnt[A] == N || dis[A] < -INF) {
+            cycle = true;
+            break;
+        }
+
+        for (pr i : arr[A]) {
+            if (dis[A] + i.second < dis[i.first]) {
+                dis[i.first] = dis[A] + i.second;
+                if (!checked[i.first]) {
+                    checked[i.first] = true;
+                    q.push(i.first);
+                }
             }
         }
     }
 
     if (cycle)
         cout << -1;
-    else if (min_dis[N] == MAX_INT)
+    else if (dis[N] == INF)
         cout << -2;
     else
-        cout << min_dis[N];
+        cout << dis[N];
+
+    return 0;
 }
