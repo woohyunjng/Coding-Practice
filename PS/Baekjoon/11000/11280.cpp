@@ -10,60 +10,57 @@ using namespace std;
 typedef pair<int, int> pr;
 typedef array<int, 3> tp;
 
-vector<int> arr[MAX], rvt_arr[MAX], scc[MAX];
-stack<int> st;
-bool checked[MAX];
-int scc_num = 0, scc_id[MAX], res[MAX];
+class TwoSat {
+  private:
+    vector<vector<int>> arr, rvt_arr;
+    vector<bool> checked;
+    vector<int> scc_id;
+    stack<int> st;
+    int scc_num;
 
-int oppose(int K) {
-    return K & 1 ? K + 1 : K - 1;
-}
-
-void kosaraju_first_dfs(int K) {
-    checked[K] = true;
-    for (int i : arr[K]) {
-        if (!checked[i])
-            kosaraju_first_dfs(i);
+    void kosaraju_first_dfs(int K) {
+        checked[K] = true;
+        for (int i : arr[K]) {
+            if (!checked[i])
+                kosaraju_first_dfs(i);
+        }
+        st.push(K);
     }
-    st.push(K);
-}
 
-void kosaraju_second_dfs(int K) {
-    checked[K] = true;
-    for (int i : rvt_arr[K]) {
-        if (!checked[i])
-            kosaraju_second_dfs(i);
+    void kosaraju_second_dfs(int K) {
+        checked[K] = true;
+        for (int i : rvt_arr[K]) {
+            if (!checked[i])
+                kosaraju_second_dfs(i);
+        }
+        scc_id[K] = scc_num;
     }
-    scc[scc_num].push_back(K);
-    scc_id[K] = scc_num;
-}
 
-void kosaraju(int V) {
-    int A;
-    for (int i = 1; i <= V; i++) {
-        if (!checked[i])
-            kosaraju_first_dfs(i);
-    }
-    fill(checked, checked + V + 1, false);
-    while (!st.empty()) {
-        A = st.top();
-        st.pop();
-        if (!checked[A]) {
-            kosaraju_second_dfs(A);
-            scc_num++;
+    void kosaraju(int V) {
+        int A;
+        for (int i = 1; i <= V; i++) {
+            if (!checked[i])
+                kosaraju_first_dfs(i);
+        }
+
+        fill(checked.begin(), checked.end(), false);
+        while (!st.empty()) {
+            A = st.top();
+            st.pop();
+            if (!checked[A]) {
+                kosaraju_second_dfs(A);
+                scc_num++;
+            }
         }
     }
-}
 
-signed main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(0), cout.tie(0);
+  public:
+    int N;
+    TwoSat(int n) : N(n), arr(n * 2 + 1), rvt_arr(n * 2 + 1), checked(n * 2 + 1), scc_id(n * 2 + 1), scc_num(0) {}
 
-    int N, M, A, B;
-    cin >> N >> M;
+    int oppose(int K) { return K & 1 ? K + 1 : K - 1; }
 
-    while (M--) {
-        cin >> A >> B;
+    void add_clause(int A, int B) {
         A = A < 0 ? -A * 2 - 1 : A * 2;
         B = B < 0 ? -B * 2 - 1 : B * 2;
 
@@ -73,16 +70,43 @@ signed main() {
         rvt_arr[A].push_back(oppose(B));
     }
 
-    kosaraju(N * 2);
-
-    for (int i = 1; i <= N; i++) {
-        if (scc_id[i * 2] == scc_id[i * 2 - 1]) {
-            cout << 0;
-            return 0;
-        }
+    void add_true(int A) {
+        A = A < 0 ? -A * 2 - 1 : A * 2;
+        arr[oppose(A)].push_back(A);
+        rvt_arr[A].push_back(oppose(A));
     }
 
-    cout << 1;
+    void run() { kosaraju(N * 2); }
+
+    bool solve() {
+        run();
+
+        for (int i = 1; i <= N; i++) {
+            if (scc_id[i * 2] == scc_id[i * 2 - 1])
+                return false;
+        }
+
+        return true;
+    }
+
+    bool get_value(int A) { return scc_id[A * 2] > scc_id[A * 2 - 1]; }
+};
+
+signed main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0), cout.tie(0);
+
+    int N, M, A, B;
+    cin >> N >> M;
+
+    TwoSat ts(N);
+
+    while (M--) {
+        cin >> A >> B;
+        ts.add_clause(A, B);
+    }
+
+    cout << (ts.solve() ? 1 : 0);
 
     return 0;
 }

@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 #define int long long
 
-#define MAX 200100
+#define MAX 30100
 #define MOD 1000000007
 #define INF 0x7f7f7f7f7f7f7f7f
 #define endl '\n'
@@ -97,22 +97,21 @@ signed main() {
     cin.tie(0), cout.tie(0);
 
     int N, M, A, B;
-    bool res;
-    cin >> N >> M;
 
-    TwoSat ts(N);
+    while (true) {
+        cin >> N >> M;
+        if (cin.eof())
+            break;
 
-    while (M--) {
-        cin >> A >> B;
-        ts.add_clause(A, B);
-    }
+        TwoSat ts(N);
 
-    res = ts.solve();
-    cout << (res ? 1 : 0) << '\n';
+        while (M--) {
+            cin >> A >> B;
+            ts.add_clause(A, B);
+        }
+        ts.add_true(1);
 
-    if (res) {
-        for (int i = 1; i <= N; i++)
-            cout << ts.get_value(i) << ' ';
+        cout << (ts.solve() ? "yes" : "no") << '\n';
     }
 
     return 0;
