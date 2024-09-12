@@ -1,3 +1,13 @@
+#include <bits/stdc++.h>
+#define int long long
+
+#define INF 0x7f7f7f7f7f7f7f7f
+#define endl '\n'
+
+using namespace std;
+typedef pair<int, int> pr;
+typedef array<int, 3> tp;
+
 class MaximumFlow {
   private:
     vector<int> level, work;
@@ -27,19 +37,14 @@ class MaximumFlow {
 
     MaximumFlow(int n) : N(n),
                          arr(n + 1), cap(n + 1, vector<int>(n + 1, 0)), flow(n + 1, vector<int>(n + 1, 0)),
-                         level(n + 1), work(n + 1) {}
+                         level(n + 1, -1), work(n + 1, 0) {}
 
-    void add_path(int A, int B, int cap_size, bool is_directed = true) {
+    void add_path(int A, int B, int cap_size) {
         arr[A].push_back(B);
         arr[B].push_back(A);
 
-        if (is_directed) {
-            cap[A][B] = cap_size;
-            cap[B][A] = 0;
-        } else {
-            cap[A][B] = cap_size;
-            cap[B][A] = cap_size;
-        }
+        cap[A][B] = cap_size;
+        cap[B][A] = cap_size;
 
         flow[A][B] = 0;
         flow[B][A] = 0;
@@ -79,3 +84,23 @@ class MaximumFlow {
         }
     }
 };
+
+signed main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0), cout.tie(0);
+
+    int N, M, S, T, A, B, C;
+    cin >> N >> M;
+
+    MaximumFlow flow(N);
+
+    while (M--) {
+        cin >> A >> B >> C;
+        flow.add_path(A, B, C);
+    }
+
+    cin >> S >> T;
+    cout << flow.run(S, T);
+
+    return 0;
+}
