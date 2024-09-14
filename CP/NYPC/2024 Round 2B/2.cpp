@@ -13,7 +13,6 @@ signed main() {
     cin.tie(0), cout.tie(0);
 
     int N, res = 0, X;
-    vector<int> comp;
     cin >> N;
 
     for (int i = 1; i <= N; i++)
