@@ -192,3 +192,5 @@ cython_debug/
 test/
 test*
 test.*
+
+PS/IOI_study/Online Tasks/*
