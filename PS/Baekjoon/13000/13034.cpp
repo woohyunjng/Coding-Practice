@@ -10,24 +10,38 @@ using namespace std;
 typedef pair<int, int> pr;
 typedef array<int, 3> tp;
 
-bool dp[MAX];
+int grundy[MAX];
 
 signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0), cout.tie(0);
 
-    int N;
-    bool res;
+    int N, X;
+    vector<int> arr;
     cin >> N;
 
-    dp[3] = true, dp[4] = true;
-    for (int i = 5; i <= N; i++) {
-        res = false;
-        
-        dp[i] = res;
+    grundy[0] = 0;
+
+    for (int i = 1; i <= N; i++) {
+        arr.clear();
+        for (int j = 0; j <= i - 2; j++)
+            arr.push_back(grundy[j] ^ grundy[i - 2 - j]);
+
+        sort(arr.begin(), arr.end());
+        arr.erase(unique(arr.begin(), arr.end()), arr.end());
+        X = 0;
+
+        for (int j = 0; j < arr.size(); j++) {
+            if (arr[j] == X)
+                X++;
+            else if (arr[j] > X)
+                break;
+        }
+
+        grundy[i] = X;
     }
 
-    cout << (dp[N] ? 1 : 2);
+    cout << (grundy[N] == 0 ? 2 : 1);
 
     return 0;
 }
