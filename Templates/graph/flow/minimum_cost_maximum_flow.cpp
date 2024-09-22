@@ -1,13 +1,15 @@
 class MinimumCostMaximumFlow {
   private:
-    int dp[MAX], parent[MAX];
-    bool checked[MAX];
+    vector<int> dp, parent;
+    vector<bool> checked;
 
   public:
-    vector<int> arr[MAX];
-    int source, sink, cap[MAX][MAX], flow[MAX][MAX], cost[MAX][MAX];
+    vector<vector<int>> arr, cap, flow, cost;
+    int N;
 
-    MinimumCostMaximumFlow(int _source, int _sink) : source(_source), sink(_sink) {}
+    MinimumCostMaximumFlow(int N) : N(N),
+                                    arr(N + 1), cap(N + 1, vector<int>(N + 1, 0)), flow(N + 1, vector<int>(N + 1, 0)),
+                                    cost(N + 1, vector<int>(N + 1, 0)), dp(N + 1), parent(N + 1), checked(N + 1) {}
 
     void add_path(int A, int B, int cst, int cap_size) {
         arr[A].push_back(B);
@@ -23,15 +25,14 @@ class MinimumCostMaximumFlow {
         flow[B][A] = 0;
     }
 
-    // 최대 유량과 최소 비용 만
-    pr run_cost_flow() {
+    pr run_cost_flow(int source, int sink) {
         queue<int> q;
         int val, money = 0, res = 0, A;
 
         while (true) {
-            fill(checked, checked + sink + 1, false);
-            fill(dp, dp + sink + 1, LLONG_MAX);
-            fill(parent, parent + sink + 1, -1);
+            fill(dp.begin(), dp.end(), INF);
+            fill(parent.begin(), parent.end(), -1);
+            fill(checked.begin(), checked.end(), false);
 
             dp[source] = 0;
             checked[source] = true;
@@ -69,54 +70,5 @@ class MinimumCostMaximumFlow {
             res += val;
         }
         return {res, money};
-    }
-
-    // 최소 비용만
-    int run_cost() {
-        queue<int> q;
-        int val, res = LLONG_MAX, money = 0, A;
-
-        while (true) {
-            fill(checked, checked + end + 1, false);
-            fill(dp, dp + end + 1, LLONG_MAX);
-            fill(parent, parent + end + 1, -1);
-
-            dp[source] = 0;
-            checked[source] = true;
-            q.push(source);
-
-            while (!q.empty()) {
-                A = q.front();
-                checked[A] = false;
-                q.pop();
-
-                for (int i : arr[A]) {
-                    if (cap[A][i] - flow[A][i] <= 0 || dp[A] + cost[A][i] >= dp[i])
-                        continue;
-                    dp[i] = dp[A] + cost[A][i];
-                    parent[i] = A;
-                    if (!checked[i]) {
-                        checked[i] = true;
-                        q.push(i);
-                    }
-                }
-            }
-
-            if (parent[end] == -1)
-                break;
-
-            val = LLONG_MAX;
-            for (int i = end; i != source; i = parent[i])
-                val = min(val, cap[parent[i]][i] - flow[parent[i]][i]);
-
-            for (int i = end; i != source; i = parent[i]) {
-                money += val * cost[parent[i]][i];
-                flow[parent[i]][i] += val;
-                flow[i][parent[i]] -= val;
-            }
-            res = min(res, money);
-        }
-
-        return res < LLONG_MAX ? res : 0;
     }
 };
