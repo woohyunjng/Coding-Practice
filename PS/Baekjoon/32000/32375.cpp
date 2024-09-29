@@ -1,0 +1,45 @@
+#include <bits/stdc++.h>
+#define int long long
+
+#define MAX 200100
+#define MOD 1000000007
+#define INF 0x7f7f7f7f7f7f7f7f
+#define endl '\n'
+
+using namespace std;
+typedef pair<int, int> pr;
+typedef array<int, 3> tp;
+
+signed main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0), cout.tie(0);
+
+    int N, K, res = 0, A;
+    multiset<int> arr;
+    multiset<int>::iterator it;
+    cin >> N >> K;
+
+    for (int i = 1; i <= N; i++) {
+        cin >> A;
+        if (A >= K)
+            res++;
+        else
+            arr.insert(A);
+    }
+
+    while (!arr.empty()) {
+        A = *prev(arr.end());
+
+        it = arr.lower_bound(K - A);
+        if (it == arr.end() || it == prev(arr.end()))
+            break;
+
+        arr.erase(prev(arr.end()));
+        arr.erase(it);
+        res++;
+    }
+
+    cout << (res ? res : -1);
+
+    return 0;
+}
