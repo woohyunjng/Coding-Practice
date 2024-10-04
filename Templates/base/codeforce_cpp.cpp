@@ -10,16 +10,19 @@ using namespace std;
 typedef pair<int, int> pr;
 typedef array<int, 3> tp;
 
+void solve() {
+    int N;
+}
+
 signed main() {
     ios_base::sync_with_stdio(false);
-    cin.tie(nullptr);
-    cout.tie(nullptr);
+    cin.tie(0), cout.tie(0);
 
-    int T;
+    int T, N;
     cin >> T;
 
-    while (T--) {
-    }
+    while (T--)
+        solve();
 
     return 0;
 }
