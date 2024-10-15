@@ -1,42 +1,38 @@
-#include <iostream>
-#include <vector>
+#include <bits/stdc++.h>
+#define int long long
+
+#define MAX 250100
+#define MOD 1000000007
+
 using namespace std;
 
-int main() {
-    int N, M, L, X, Y;
+int A[MAX], Q[MAX][2];
+
+signed main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0), cout.tie(0);
+
+    int N, M, L, K, res = 0, X, Y;
     cin >> N >> M >> L;
 
-    vector<int> arr[N + 1];
-    for (int i = 1 ; i <= N ; i ++) {
-        arr[i].push_back(i);
-    }
+    for (int i = 1; i <= M; i++)
+        cin >> Q[i][0] >> Q[i][1];
 
-    for (int i = 0 ; i < M ; i ++) {
-        cin >> X >> Y;
-        vector<int> arr2(arr[Y]);
-        for (int j : arr2){
-            arr[X].push_back(j);
-        }
-    }
+    A[1] = 1;
+    for (int i = M; i >= 1; i--)
+        A[Q[i][1]] = (A[Q[i][1]] + A[Q[i][0]]) % MOD;
 
-
-    int K, U, farr[N + 1] = {0};
-    long long int V, res;
-
-    for (int i : arr[1]) {
-        farr[i] ++;
-    }
-
-    for (int i = 0 ; i < L ; i ++) {
-        int varr[N + 1] = {1};
+    while (L--) {
+        cin >> K;
         res = 0;
 
-        cin >> K;
-        for (int j = 0 ; j < K ; j ++) {
-            cin >> U >> V;
-            res += V * farr[U] % 1000000007;
+        while (K--) {
+            cin >> X >> Y;
+            res = (res + A[X] * Y) % MOD;
         }
 
-        cout << res % 1000000007;
+        cout << res << '\n';
     }
+
+    return 0;
 }
