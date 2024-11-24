@@ -194,3 +194,5 @@ test*
 test.*
 
 PS/IOI_study/Online Tasks/*
+
+.cph/
