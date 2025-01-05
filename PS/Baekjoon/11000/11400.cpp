@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 #define int long long
 
-#define MAX 1000100
+#define MAX 200100
 #define MOD 1000000007
 #define INF 0x7f7f7f7f7f7f7f7f
 #define endl '\n'
@@ -10,54 +10,52 @@ using namespace std;
 typedef pair<int, int> pr;
 typedef array<int, 3> tp;
 
-vector<pr> arr[MAX], res;
-pr line[MAX];
-int vst[MAX];
+vector<pr> ans;
+vector<int> adj[MAX];
+int vst[MAX], cnt = 0;
 
-int dfs(int K, int before, int cnt) {
-    int ret = cnt, X;
-    vst[K] = cnt;
+int dfs(int node, int par) {
+    int res = ++cnt, X, Y = 0;
+    vst[node] = res;
 
-    for (pr i : arr[K]) {
-        if (i.first == before)
+    for (int i : adj[node]) {
+        if (i == par)
             continue;
-        if (vst[i.first]) {
-            ret = min(ret, vst[i.first]);
-            continue;
+        else if (vst[i])
+            res = min(res, vst[i]);
+        else {
+            X = dfs(i, node), Y++, res = min(res, X);
+            if (X > vst[node])
+                ans.push_back({min(node, i), max(node, i)});
         }
-
-        X = dfs(i.first, K, cnt + 1);
-        if (X > vst[K])
-            res.push_back(line[i.second]);
-        ret = min(ret, X);
     }
-    return ret;
+
+    return res;
 }
 
 signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0), cout.tie(0);
 
-    int N, M, A, B;
-    cin >> N >> M;
+    int V, E, A, B;
+    cin >> V >> E;
 
-    for (int i = 1; i <= M; i++) {
+    while (E--) {
         cin >> A >> B;
-        line[i] = {min(A, B), max(A, B)};
-        arr[A].push_back({B, i});
-        arr[B].push_back({A, i});
+        adj[A].push_back(B), adj[B].push_back(A);
     }
 
-    for (int i = 1; i <= N; i++) {
-        if (!vst[i])
-            dfs(i, 0, 1);
+    for (int i = 1; i <= V; i++) {
+        if (vst[i])
+            continue;
+        dfs(i, -1);
     }
 
-    sort(res.begin(), res.end());
-    res.erase(unique(res.begin(), res.end()), res.end());
+    sort(ans.begin(), ans.end());
+    ans.erase(unique(ans.begin(), ans.end()), ans.end());
 
-    cout << res.size() << '\n';
-    for (pr i : res)
+    cout << ans.size() << '\n';
+    for (pr i : ans)
         cout << i.first << ' ' << i.second << '\n';
 
     return 0;

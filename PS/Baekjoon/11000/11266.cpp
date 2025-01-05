@@ -1,63 +1,56 @@
 #include <bits/stdc++.h>
 #define int long long
 
-#define MAX 200100
-#define MOD 1000000007
-#define INF 0x7f7f7f7f7f7f7f7f
-#define endl '\n'
-
+#define MAX 10100
 using namespace std;
-typedef pair<int, int> pr;
-typedef array<int, 3> tp;
 
-vector<int> arr[MAX], res;
-int vst[MAX], cnt;
+vector<int> adj[MAX], ans;
+int vst[MAX], cnt = 0;
 
-int dfs(int K, bool root) {
-    int ret = ++cnt, X = 0, Y;
-    vst[K] = ret;
+int dfs(int node, bool root) {
+    int res = ++cnt, X, Y = 0;
+    vst[node] = res;
 
-    for (int i : arr[K]) {
-        if (vst[i]) {
-            ret = min(ret, vst[i]);
-            continue;
+    for (int i : adj[node]) {
+        if (vst[i])
+            res = min(res, vst[i]);
+        else {
+            X = dfs(i, false), Y++, res = min(res, X);
+            if (!root && X >= vst[node])
+                ans.push_back(node);
         }
-        X++;
-        Y = dfs(i, false);
-        if (!root && Y >= vst[K])
-            res.push_back(K);
-        ret = min(ret, Y);
     }
 
-    if (root && X > 1)
-        res.push_back(K);
-    return ret;
+    if (root && Y > 1)
+        ans.push_back(node);
+    return res;
 }
 
 signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0), cout.tie(0);
 
-    int N, M, A, B;
-    cin >> N >> M;
+    int V, E, A, B;
+    cin >> V >> E;
 
-    while (M--) {
+    while (E--) {
         cin >> A >> B;
-        arr[A].push_back(B);
-        arr[B].push_back(A);
+        adj[A].push_back(B), adj[B].push_back(A);
     }
 
-    for (int i = 1; i <= N; i++) {
-        if (!vst[i])
-            dfs(i, true);
+    for (int i = 1; i <= V; i++) {
+        if (vst[i])
+            continue;
+        dfs(i, true);
     }
 
-    sort(res.begin(), res.end());
-    res.erase(unique(res.begin(), res.end()), res.end());
+    sort(ans.begin(), ans.end());
+    ans.erase(unique(ans.begin(), ans.end()), ans.end());
 
-    cout << res.size() << '\n';
-    for (int i : res)
+    cout << ans.size() << '\n';
+    for (int i : ans)
         cout << i << ' ';
+    cout << '\n';
 
     return 0;
 }
