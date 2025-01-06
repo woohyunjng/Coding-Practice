@@ -12,8 +12,7 @@ bool checked[MAX];
 
 int convert(int A, int B, int K) { return (A - 1) * K + B; }
 
-void add_path(int A, int B, int cst, int cap_size)
-{
+void add_path(int A, int B, int cst, int cap_size) {
     arr[A].push_back(B);
     arr[B].push_back(A);
 
@@ -27,13 +26,11 @@ void add_path(int A, int B, int cst, int cap_size)
     flow[B][A] = 0;
 }
 
-int minimum_cost_flow(int start, int end)
-{
+int minimum_cost_flow(int start, int end) {
     queue<int> q;
     int val, res = LLONG_MAX, money = 0, A;
 
-    while (true)
-    {
+    while (true) {
         fill(checked, checked + end + 1, false);
         fill(dp, dp + end + 1, LLONG_MAX);
         fill(parent, parent + end + 1, -1);
@@ -42,20 +39,17 @@ int minimum_cost_flow(int start, int end)
         checked[start] = true;
         q.push(start);
 
-        while (!q.empty())
-        {
+        while (!q.empty()) {
             A = q.front();
             checked[A] = false;
             q.pop();
 
-            for (int i : arr[A])
-            {
+            for (int i : arr[A]) {
                 if (cap[A][i] - flow[A][i] <= 0 || dp[A] + cost[A][i] >= dp[i])
                     continue;
                 dp[i] = dp[A] + cost[A][i];
                 parent[i] = A;
-                if (!checked[i])
-                {
+                if (!checked[i]) {
                     checked[i] = true;
                     q.push(i);
                 }
@@ -69,8 +63,7 @@ int minimum_cost_flow(int start, int end)
         for (int i = end; i != start; i = parent[i])
             val = min(val, cap[parent[i]][i] - flow[parent[i]][i]);
 
-        for (int i = end; i != start; i = parent[i])
-        {
+        for (int i = end; i != start; i = parent[i]) {
             money += val * cost[parent[i]][i];
             flow[parent[i]][i] += val;
             flow[i][parent[i]] -= val;
@@ -80,8 +73,7 @@ int minimum_cost_flow(int start, int end)
     return res;
 }
 
-signed main()
-{
+signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
@@ -90,10 +82,8 @@ signed main()
     cin >> N >> M >> T;
     K = N * M + 1;
 
-    for (int i = 1; i <= N; i++)
-    {
-        for (int j = 1; j <= M; j++)
-        {
+    for (int i = 1; i <= N; i++) {
+        for (int j = 1; j <= M; j++) {
             cin >> board[i][j];
             if ((i + j) & 1)
                 add_path(convert(i, j, M), K, 0, 1);
@@ -102,14 +92,11 @@ signed main()
         }
     }
 
-    for (int i = 1; i <= N; i++)
-    {
-        for (int j = 1; j <= M; j++)
-        {
+    for (int i = 1; i <= N; i++) {
+        for (int j = 1; j <= M; j++) {
             if ((i + j) & 1)
                 continue;
-            for (pr k : go)
-            {
+            for (pr k : go) {
                 int x = i + k.first, y = j + k.second;
                 if (x <= 0 || x > N || y <= 0 || y > M)
                     continue;
