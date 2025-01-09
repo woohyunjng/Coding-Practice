@@ -25,10 +25,9 @@ signed main() {
         }
     }
 
-    for (int i = 0; i < N; i++) {
+    for (int i = 0; i < N; i++)
         if (res[i])
             ans += i + 1 - res[i];
-    }
 
     cout << ans << '\n';
 
