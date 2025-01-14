@@ -1,68 +1,67 @@
 #include <bits/stdc++.h>
 #define int long long
 
+#define MAX 500100
+#define INF 0x3f3f3f3f3f3f3f3f
+
 using namespace std;
-typedef pair<int, int> pr;
-typedef array<int, 3> tp;
+typedef array<int, 2> pr;
 
-vector<pr> A, B, arr_A, arr_B;
+int A[MAX][2], B[MAX][2], ans = 0;
 
-int get_val(int X, int Y) { return (arr_B[Y].first - arr_A[X].first) * (arr_B[Y].second - arr_A[X].second); }
+void dnc_opt(int l, int r, int s, int e) {
+    if (l > r)
+        return;
+    int mid = l + r >> 1, opt = -1, res = -INF, val;
 
-int divide_and_conquer(int s, int e, int l, int r) {
-    if (s > e)
-        return 0;
-    int mid = (s + e) >> 1, res = -LLONG_MAX, X = l;
-
-    for (int i = l; i <= r; i++) {
-        if (arr_B[mid].first <= arr_A[i].first && arr_B[mid].second <= arr_A[i].second)
+    for (int i = s; i <= e; i++) {
+        if (A[i][0] >= B[mid][0] && A[i][1] >= B[mid][1])
             continue;
-        if (res <= get_val(i, mid))
-            X = i, res = get_val(i, mid);
+        val = (B[mid][0] - A[i][0]) * (B[mid][1] - A[i][1]);
+        if (res <= val)
+            res = val, opt = i;
     }
+    ans = max(ans, res);
 
-    res = max(res, divide_and_conquer(s, mid - 1, l, X));
-    res = max(res, divide_and_conquer(mid + 1, e, X, r));
-
-    return res;
+    dnc_opt(l, mid - 1, s, opt), dnc_opt(mid + 1, r, opt, e);
 }
 
 signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0), cout.tie(0);
 
-    int N, M, res, X, Y;
-    cin >> N >> M;
+    int M, N, X, Y;
+    vector<pr> temp;
 
-    for (int i = 1; i <= N; i++) {
+    cin >> M >> N;
+    for (int i = 0; i < M; i++) {
         cin >> X >> Y;
-        A.push_back({X, Y});
+        temp.push_back({X, Y});
     }
 
-    for (int i = 1; i <= M; i++) {
-        cin >> X >> Y;
-        B.push_back({X, Y});
-    }
-
-    sort(A.begin(), A.end());
-    sort(B.begin(), B.end());
-
-    for (pr i : A) {
-        if (!arr_A.empty() && arr_A.back().second <= i.second)
+    sort(temp.begin(), temp.end()), X = 0;
+    for (pr i : temp) {
+        if (X && A[X][1] <= i[1])
             continue;
-        arr_A.push_back(i);
+        A[++X][0] = i[0], A[X][1] = i[1];
+    }
+    temp.clear(), M = X;
+
+    for (int i = 0; i < N; i++) {
+        cin >> X >> Y;
+        temp.push_back({X, Y});
     }
 
-    for (pr i : B) {
-        while (!arr_B.empty() && arr_B.back().second <= i.second)
-            arr_B.pop_back();
-        arr_B.push_back(i);
+    sort(temp.begin(), temp.end()), X = 0;
+    for (pr i : temp) {
+        while (X && B[X][1] <= i[1])
+            --X;
+        B[++X][0] = i[0], B[X][1] = i[1];
     }
+    temp.clear(), N = X;
 
-    N = arr_A.size(), M = arr_B.size();
-
-    res = divide_and_conquer(0, M - 1, 0, N - 1);
-    cout << res;
+    dnc_opt(1, N, 1, M);
+    cout << ans << '\n';
 
     return 0;
 }

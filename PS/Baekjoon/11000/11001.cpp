@@ -2,50 +2,42 @@
 #define int long long
 
 #define MAX 100100
-#define MOD 1000000007
-#define INF 0x7f7f7f7f7f7f7f7f
-#define endl '\n'
-
 using namespace std;
-typedef pair<int, int> pr;
-typedef array<int, 3> tp;
 
-int T[MAX], V[MAX], D;
+int D, dp[MAX], T[MAX], V[MAX];
 
-int get_val(int X, int Y) { return (Y - X) * T[Y] + V[X]; }
+void dnc_opt(int l, int r, int s, int e) {
+    if (l > r)
+        return;
+    int mid = l + r >> 1, opt = -1, res = -1, val;
 
-int divide_and_conquer(int s, int e, int l, int r) {
-    if (s > e)
-        return 0;
-    int mid = (s + e) / 2, res = 0, X = max(mid - D, l);
-
-    for (int i = X; i <= min(mid, r); i++) {
-        if (get_val(X, mid) < get_val(i, mid))
-            X = i;
+    for (int i = max(s, mid - D); i <= min(mid, e); i++) {
+        val = (mid - i) * T[mid] + V[i];
+        if (val > res)
+            res = val, opt = i;
     }
-    res = get_val(X, mid);
+    dp[mid] = res;
 
-    res = max(res, divide_and_conquer(s, mid - 1, l, X));
-    res = max(res, divide_and_conquer(mid + 1, e, X, r));
-
-    return res;
+    dnc_opt(l, mid - 1, s, opt), dnc_opt(mid + 1, r, opt, e);
 }
 
 signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0), cout.tie(0);
 
-    int N, res;
+    int N, res = 0;
     cin >> N >> D;
 
     for (int i = 1; i <= N; i++)
         cin >> T[i];
-
     for (int i = 1; i <= N; i++)
         cin >> V[i];
 
-    res = divide_and_conquer(1, N, 1, N);
-    cout << res;
+    dnc_opt(1, N, 1, N);
+
+    for (int i = 1; i <= N; i++)
+        res = max(res, dp[i]);
+    cout << res << '\n';
 
     return 0;
 }
