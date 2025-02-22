@@ -1,123 +1,119 @@
 #include <bits/stdc++.h>
-#define MAX 100100
 #define int long long
 
 using namespace std;
-typedef pair<int, int> pr;
+typedef array<int, 2> pr;
 typedef array<int, 3> tp;
-typedef array<int, 4> ftp;
 
-class UnionFind {
-  private:
-    vector<int> uf_parent, rank;
-    stack<tp> st;
+const int MAX = 200000;
 
-  public:
-    UnionFind(int N) : uf_parent(N + 1), rank(N + 1, 0) { clear(N); }
+int parent[MAX], rnk[MAX], V[MAX][2], ans[MAX], val[MAX];
+vector<tp> st, arr;
+vector<pr> tree[MAX * 4];
+vector<int> lst[MAX];
 
-    int find(int K) { return uf_parent[K] == K ? K : find(uf_parent[K]); }
+int find(int X) { return X == parent[X] ? X : find(parent[X]); }
 
-    bool uni(int A, int B) {
-        A = find(A), B = find(B);
-        if (A == B)
-            return false;
-
-        if (rank[A] < rank[B])
-            swap(A, B);
-        st.push({A, B, rank[A] == rank[B]});
-        uf_parent[B] = A;
-        rank[A] += rank[A] == rank[B];
-        return true;
-    }
-
-    void rollback(int cnt = 1) {
-        while (cnt--) {
-            tp cur = st.top();
-            st.pop();
-            uf_parent[cur[1]] = cur[1];
-            rank[cur[0]] -= cur[2];
-        }
-    }
-
-    void clear(int N) {
-        for (int i = 1; i <= N; i++) {
-            uf_parent[i] = i;
-            rank[i] = 0;
-        }
-    }
-};
-
-vector<pr> tree[MAX << 2];
-ftp edge_time[MAX];
-pr query[MAX];
-int ans[MAX];
-
-UnionFind uf(MAX - 1);
-
-void update(int n, int s, int e, int l, int r, pr k) {
-    if (l <= s && e <= r) {
-        tree[n].push_back(k);
+void uni(int X, int Y) {
+    X = find(X), Y = find(Y);
+    if (X == Y)
         return;
-    }
-    if (e < l || r < s)
-        return;
-
-    update(n << 1, s, (s + e) >> 1, l, r, k);
-    update(n << 1 | 1, ((s + e) >> 1) + 1, e, l, r, k);
+    if (rnk[X] < rnk[Y])
+        swap(X, Y);
+    parent[Y] = X;
+    if (rnk[X] == rnk[Y])
+        rnk[X]++, st.push_back({X, Y, 1});
+    else
+        st.push_back({X, Y, 0});
 }
 
-void divide(int n, int s, int e) {
+void rollback(int cnt) {
+    tp K;
+    while (cnt--) {
+        K = st.back(), st.pop_back();
+        parent[K[1]] = K[1], rnk[K[0]] -= K[2];
+    }
+}
+
+void update(int n, int s, int e, int l, int r, pr v) {
+    if (r < s || e < l)
+        return;
+    else if (l <= s && e <= r)
+        tree[n].push_back(v);
+    else {
+        int m = s + e >> 1;
+        update(n << 1, s, m, l, r, v), update(n << 1 | 1, m + 1, e, l, r, v);
+    }
+}
+
+void dfs(int n, int s, int e) {
     int cnt = 0;
-    for (pr i : tree[n])
-        cnt += uf.uni(i.first, i.second);
+    for (pr i : tree[n]) {
+        if (find(i[0]) == find(i[1]))
+            continue;
+        cnt++, uni(i[0], i[1]);
+    }
 
     if (s == e)
-        ans[s] = (uf.find(query[s].first) == uf.find(query[s].second));
+        ans[s] = find(arr[s - 1][1]) == find(arr[s - 1][2]);
     else {
-        divide(n << 1, s, (s + e) >> 1);
-        divide(n << 1 | 1, ((s + e) >> 1) + 1, e);
+        int m = s + e >> 1;
+        dfs(n << 1, s, m), dfs(n << 1 | 1, m + 1, e);
     }
-    uf.rollback(cnt);
+
+    rollback(cnt);
 }
+
+map<pr, int> num;
 
 signed main() {
     ios_base::sync_with_stdio(false);
-    cin.tie(nullptr);
-    cout.tie(nullptr);
+    cin.tie(0), cout.tie(0);
 
-    int N, M, A, B, C, K, cnt = 0;
+    int N, M, S, T, X, Y, K = 0;
+    vector<tp> query;
+
     cin >> N >> M;
+    for (int i = 1; i <= N; i++)
+        parent[i] = i, rnk[i] = 1;
 
-    map<pr, int> mp;
-    vector<ftp> edges;
+    for (int i = 0; i < M; i++) {
+        cin >> T >> X >> Y;
+        if (X > Y)
+            swap(X, Y);
+        if (num.find((pr){X, Y}) == num.end())
+            num[(pr){X, Y}] = ++K;
 
-    for (int i = 1; i <= M; i++) {
-        cin >> A >> B >> C;
-        if (B > C)
-            swap(B, C);
+        query.push_back({T, X, Y});
+        if (T == 3)
+            arr.push_back({i, X, Y});
+    }
+    arr.push_back({M + 1, 0, 0}), S = arr.size() - 1;
 
-        if (A == 1) {
-            mp[{B, C}] = i;
-            edge_time[i] = {B, C, cnt + 1, -1};
-        } else if (A == 2) {
-            K = mp[{B, C}];
-            edge_time[K][3] = cnt;
-        } else if (A == 3)
-            query[++cnt] = {B, C};
+    for (int i = 0; i < M; i++) {
+        val[i] = lower_bound(arr.begin(), arr.end(), (tp){i + 1, 0, 0}) - arr.begin() + 1;
+        X = num[{query[i][1], query[i][2]}];
+        if (query[i][0] == 2)
+            lst[X].push_back(val[i] - 1);
     }
 
-    for (int i = 1; i <= M; i++) {
-        if (edge_time[i][2] == 0)
+    for (int i = 1; i <= K; i++)
+        reverse(lst[i].begin(), lst[i].end());
+
+    for (int i = 0; i < M; i++) {
+        if (query[i][0] != 1 || val[i] > S)
             continue;
-        if (edge_time[i][3] == -1)
-            edge_time[i][3] = cnt;
-
-        update(1, 1, cnt, edge_time[i][2], edge_time[i][3], {edge_time[i][0], edge_time[i][1]});
+        X = num[{query[i][1], query[i][2]}];
+        if (lst[X].empty())
+            Y = S;
+        else
+            Y = lst[X].back(), lst[X].pop_back();
+        update(1, 1, S, val[i], Y, {query[i][1], query[i][2]});
     }
 
-    divide(1, 1, cnt);
+    dfs(1, 1, S);
 
-    for (int i = 1; i <= cnt; i++)
+    for (int i = 1; i <= S; i++)
         cout << ans[i] << '\n';
 
     return 0;

@@ -1,8 +1,9 @@
 #include <bits/stdc++.h>
 #define int long long
 
-#define MAX 200100
 using namespace std;
+
+const int MAX = 300000;
 
 void solve() {
     int N;
