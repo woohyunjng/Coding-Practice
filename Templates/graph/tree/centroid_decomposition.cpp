@@ -1,45 +1,39 @@
 vector<int> arr[MAX];
 int sz[MAX], C[MAX];
-bool checked[MAX];
+bool vst[MAX];
 
-int get_size(int node, int parent) {
+int get_size(int node, int par) {
     sz[node] = 1;
     for (int i : arr[node]) {
-        if (i == parent || checked[i])
+        if (i == par || vst[i])
             continue;
         sz[node] += get_size(i, node);
     }
     return sz[node];
 }
 
-int get_centroid(int node, int parent, int cap) {
+int get_cent(int node, int par, int cap) {
     for (int i : arr[node]) {
-        if (i == parent || checked[i])
+        if (i == par || vst[i])
             continue;
         if (sz[i] * 2 > cap)
-            return get_centroid(i, node, cap);
+            return get_cent(i, node, cap);
     }
     return node;
 }
 
-int get_res(int node, int parent) {
-    // 분할 정복
-}
-
-int divide_and_conquer(int node) {
-    get_size(node, -1);
-    int res = LLONG_MAX, cent = get_centroid(node, -1, sz[node]);
-    checked[cent] = true;
+void dnc(int node) {
+    int cent = get_cent(node, -1, get_sz(node, -1));
+    vst[cent] = true;
 
     for (int i : arr[cent]) {
-        if (checked[i])
+        if (vst[i])
             continue;
     }
 
     for (int i : arr[cent]) {
-        if (checked[i])
+        if (vst[i])
             continue;
-        res = min(res, divide_and_conquer(i));
+        dnc(i);
     }
-    return res;
 }

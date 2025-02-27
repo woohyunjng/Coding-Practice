@@ -11,8 +11,7 @@ void get_dis(int K) {
     dis[K] = 0;
 
     queue<int> q;
-    q.push(K);
-    checked[K] = true;
+    q.push(K), checked[K] = true;
 
     while (!q.empty()) {
         A = q.front(), q.pop();
@@ -26,10 +25,8 @@ void get_dis(int K) {
         for (pr i : arr[A]) {
             if (dis[A] + i.second < dis[i.first]) {
                 dis[i.first] = dis[A] + i.second;
-                if (!checked[i.first]) {
-                    checked[i.first] = true;
-                    q.push(i.first);
-                }
+                if (!checked[i.first])
+                    checked[i.first] = true, q.push(i.first);
             }
         }
     }

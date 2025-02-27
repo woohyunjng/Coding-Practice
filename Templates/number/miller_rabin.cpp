@@ -6,8 +6,7 @@ int fpow(int N, int K, int MOD) {
     while (K) {
         if (K & 1)
             res = res * N % MOD;
-        K >>= 1;
-        N = N * N % MOD;
+        K >>= 1, N = N * N % MOD;
     }
     return res;
 }
@@ -19,10 +18,8 @@ bool is_prime(int N) {
     int D = N - 1, K = 0, M;
     bool res = true, check = true;
 
-    while (~D & 1) {
-        D >>= 1;
-        K++;
-    }
+    while (~D & 1)
+        D >>= 1, K++;
 
     for (int i : base) {
         if (N == i)
@@ -37,17 +34,12 @@ bool is_prime(int N) {
             M = fpow(M, 2, N);
             if (M == A - 1) {
                 check = false;
-                break
+                break;
             }
         }
-        if (check) {
-            res = false;
-            break;
-        }
+        if (check)
+            return false;
     }
 
-    if (res)
-        return true;
-    else
-        return false;
+    return res;
 }

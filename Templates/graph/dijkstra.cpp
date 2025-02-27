@@ -8,8 +8,7 @@ vector<int> get_dis(int K) {
     dis[K] = 0;
 
     while (pq.size()) {
-        pr p = pq.top();
-        pq.pop();
+        pr p = pq.top(), pq.pop();
 
         if (dis[p.second] != p.first)
             continue;

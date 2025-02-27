@@ -1,1 +1,1 @@
-int gcd(int a, int b) { return b ? gcd(b, a % b) : a; }
+int gcd(int X, int Y) { return Y ? gcd(Y, X % Y) : X; }

@@ -5,10 +5,8 @@ class Manacher {
 
     Manacher(string S) : S(S) {
         K = "#";
-        for (char i : S) {
-            K.push_back(i);
-            K.push_back('#');
-        }
+        for (char i : S)
+            K.push_back(i), K.push_back('#');
         rad.resize(K.size());
     }
 
@@ -19,10 +17,8 @@ class Manacher {
                 rad[i] = min(r - i, rad[2 * c - i]);
             while (i - rad[i] - 1 >= 0 && i + rad[i] + 1 < K.size() && K[i - rad[i] - 1] == K[i + rad[i] + 1])
                 rad[i]++;
-            if (r < i + rad[i]) {
-                r = i + rad[i];
-                c = i;
-            }
+            if (r < i + rad[i])
+                r = i + rad[i], c = i;
         }
     }
 };

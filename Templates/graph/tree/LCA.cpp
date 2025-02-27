@@ -1,33 +1,15 @@
 int N, parent[MAX][MAX_LOG], depth[MAX];
-vector<int> arr[MAX];
-bool checked[MAX];
+vector<int> adj[MAX];
 
-void dfs(int K) {
-    int A;
-    stack<int> st;
+void dfs(int node, int par) {
+    depth[node] = depth[par] + 1, parent[node][0] = par;
+    for (int i = 1; i < MAX_LOG; i++)
+        parent[node][i] = parent[parent[node][i - 1]][i - 1];
 
-    st.push(K);
-    checked[K] = true;
-
-    while (!st.empty()) {
-        A = st.top();
-        st.pop();
-
-        for (int i : arr[A]) {
-            if (checked[i])
-                continue;
-            parent[i][0] = A;
-            checked[i] = true;
-            depth[i] = depth[A] + 1;
-
-            for (int j = 1; j < MAX_LOG; j++) {
-                if (!parent[i][j - 1])
-                    continue;
-                parent[i][j] = parent[parent[i][j - 1]][j - 1];
-            }
-
-            st.push(i);
-        }
+    for (int i : adj[node]) {
+        if (i == par)
+            continue;
+        dfs(i, node);
     }
 }
 
@@ -42,10 +24,9 @@ int LCA(int A, int B) {
         diff >>= 1;
     }
 
-    for (int i = MAX_LOG - 1; i >= 0; i--) {
+    for (int i = MAX_LOG - 1; i >= 0; i--)
         if (parent[A][i] != parent[B][i])
             A = parent[A][i], B = parent[B][i];
-    }
     if (A != B)
         A = parent[A][0];
     return A;

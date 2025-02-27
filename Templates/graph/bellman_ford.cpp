@@ -6,8 +6,7 @@ void get_dis(int K) {
     int A;
     bool cycle, change;
 
-    fill(dis, dis + N + 1, INF);
-    dis[K] = 0;
+    fill(dis, dis + N + 1, INF), dis[K] = 0;
 
     for (int i = 0; i < N; i++) {
         change = false;
@@ -15,10 +14,8 @@ void get_dis(int K) {
             if (dis[j] == INF)
                 continue;
             for (pr k : arr[j]) {
-                if (dis[j] + k.second < dis[k.first]) {
-                    dis[k.first] = dis[j] + k.second;
-                    change = true;
-                }
+                if (dis[j] + k.second < dis[k.first])
+                    dis[k.first] = dis[j] + k.second, change = true;
             }
         }
 

@@ -5,13 +5,10 @@ int euler_phi(int N) {
             continue;
         while (!(N % i))
             N /= i;
-        res /= i;
-        res *= i - 1;
+        res /= i, res *= i - 1;
     }
 
-    if (N != 1) {
-        res /= N;
-        res *= N - 1;
-    }
+    if (N != 1)
+        res /= N, res *= N - 1;
     return res;
 }

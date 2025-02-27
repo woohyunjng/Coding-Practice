@@ -19,10 +19,9 @@ vector<int> kmp(string S, string P) {
         while (j > 0 && S[i] != P[j])
             j = pi[j - 1];
         if (S[i] == P[j]) {
-            if (j == P_size - 1) {
-                ans.push_back(i - P_size + 2);
-                j = pi[j];
-            } else
+            if (j == P_size - 1)
+                ans.push_back(i - P_size + 2), j = pi[j];
+            else
                 j++;
         }
     }
