@@ -3,145 +3,105 @@
 
 using namespace std;
 
-const int MAX = 100001;
-const int INF = 0x3f3f3f3f3f3f3f3f;
-
-struct Line {
-    int A, B;
-    int get(int X) { return A * X + B; }
-
-    Line(int A, int B) : A(A), B(B) {}
-};
+const int MAX = 200001;
+const int MAX_K = 11;
 
 struct Node {
-    int s, e, l = -1, r = -1;
-    Line line;
+    int point[MAX_K], sm[MAX_K], end[MAX_K], res;
 
-    Node(int s, int e, Line line) : s(s), e(e), line(line) {}
+    // point -> i에서 시작했을때 끝나는 친구
+    // sm -> 하나의 친구가 i에서 시작했을때 비용
+    // end -> i에서 끝나는 친구들의 수
+    // res -> 결과값
+
+    Node() {
+        for (int i = 1; i < MAX_K; i++)
+            point[i] = i;
+        fill(sm, sm + MAX_K, 0);
+        fill(end, end + MAX_K, 0);
+        res = 0;
+    }
 };
 
-int H[MAX], A[MAX], C[MAX], F[MAX], tree_seg[MAX * 4];
+Node merge(Node X, Node Y) {
+    Node res;
 
-vector<Node> tree_lichao;
-vector<vector<pair<int, Line>>> st;
+    for (int i = 1; i < MAX_K; i++)
+        res.point[i] = Y.point[X.point[i]];
 
-void update_seg(int n, int s, int e, int x, int v) {
+    for (int i = 1; i < MAX_K; i++)
+        res.end[i] = Y.end[i];
+    for (int i = 1; i < MAX_K; i++)
+        res.end[Y.point[i]] += X.end[i];
+
+    for (int i = 1; i < MAX_K; i++)
+        res.sm[i] = X.sm[i] + Y.sm[X.point[i]];
+
+    res.res = X.res + Y.res;
+    for (int i = 1; i < MAX_K; i++)
+        res.res += Y.sm[i] * X.end[i];
+
+    return res;
+}
+
+int A[MAX], B[MAX], C[MAX][MAX_K];
+Node tree[MAX * 4];
+
+void init(int n, int s, int e) {
+    if (s == e) {
+        tree[n] = Node(), tree[n].res = C[s][1];
+        for (int i = 1; i < MAX_K; i++)
+            tree[n].sm[i] = C[s][i];
+        tree[n].point[A[s]] = B[s], tree[n].end[tree[n].point[1]] = 1;
+    } else {
+        int m = s + e >> 1;
+        init(n << 1, s, m), init(n << 1 | 1, m + 1, e);
+        tree[n] = merge(tree[n << 1], tree[n << 1 | 1]);
+    }
+}
+
+void update(int n, int s, int e, int x, int a, int b) {
     if (x < s || e < x)
         return;
-    else if (s == e)
-        tree_seg[n] = min(INF, v);
-    else {
-        int m = s + e >> 1;
-        update_seg(n << 1, s, m, x, v), update_seg(n << 1 | 1, m + 1, e, x, v);
-        tree_seg[n] = min(tree_seg[n << 1], tree_seg[n << 1 | 1]);
-    }
-}
-
-int query_seg(int n, int s, int e, int l, int r) {
-    if (r < s || e < l)
-        return INF;
-    else if (l <= s && e <= r)
-        return tree_seg[n];
-    else {
-        int m = s + e >> 1;
-        return min(
-            query_seg(n << 1, s, m, l, r),
-            query_seg(n << 1 | 1, m + 1, e, l, r));
-    }
-}
-
-void update_lichao(int n, Line v) {
-    st.back().push_back({n, tree_lichao[n].line});
-
-    int s = tree_lichao[n].s, e = tree_lichao[n].e, m = s + e >> 1;
-    Line low = tree_lichao[n].line, high = v;
-
-    if (low.get(s) > high.get(s))
-        swap(low, high);
-    if (low.get(e) <= high.get(e)) {
-        tree_lichao[n].line = low;
-        return;
-    }
-
-    if (low.get(m) < high.get(m)) {
-        tree_lichao[n].line = low;
-        if (tree_lichao[n].r == -1) {
-            tree_lichao[n].r = tree_lichao.size();
-            tree_lichao.push_back(Node(m + 1, e, Line(0, INF)));
-        }
-        update_lichao(tree_lichao[n].r, high);
+    else if (s == e) {
+        tree[n].end[tree[n].point[a]] -= a == 1;
+        tree[n].point[a] = b;
+        tree[n].end[tree[n].point[a]] += a == 1;
     } else {
-        tree_lichao[n].line = high;
-        if (tree_lichao[n].l == -1) {
-            tree_lichao[n].l = tree_lichao.size();
-            tree_lichao.push_back(Node(s, m, Line(0, INF)));
-        }
-        update_lichao(tree_lichao[n].l, low);
+        int m = s + e >> 1;
+        update(n << 1, s, m, x, a, b), update(n << 1 | 1, m + 1, e, x, a, b);
+        tree[n] = merge(tree[n << 1], tree[n << 1 | 1]);
     }
-}
-
-int query_lichao(int n, int v) {
-    if (n == -1)
-        return INF;
-    int s = tree_lichao[n].s, e = tree_lichao[n].e, m = s + e >> 1;
-
-    if (v <= m)
-        return min(tree_lichao[n].line.get(v), query_lichao(tree_lichao[n].l, v));
-    return min(tree_lichao[n].line.get(v), query_lichao(tree_lichao[n].r, v));
-}
-
-void rollback_lichao() {
-    for (pair<int, Line> i : st.back())
-        tree_lichao[i.first].line = i.second;
-    st.pop_back();
 }
 
 signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0), cout.tie(0);
 
-    int N, T, X, V, ans;
-    vector<int> arr;
+    int N, K, Q, X, Y, Z, ans;
 
-    cin >> N >> T;
-    for (int i = 1; i <= N; i++)
-        cin >> H[i];
+    cin >> N >> K;
+
     for (int i = 1; i < N; i++)
-        cin >> A[i];
-    for (int i = 1; i <= N; i++)
-        cin >> C[i];
+        for (int j = 1; j <= K; j++)
+            cin >> C[i][j];
+
     for (int i = 1; i < N; i++)
-        cin >> F[i], F[i] += F[i - 1];
+        cin >> A[i] >> B[i];
 
-    if (T == 1) {
-        fill(tree_seg + 1, tree_seg + N * 4, INF), update_seg(1, 1, N, H[1], 0), V = H[1];
-        for (int i = 1; i < N; i++) {
-            X = query_seg(1, 1, N, H[i], H[i]) + A[i] + F[i - 1], V = max(V, H[i + 1]);
-            for (int j = 0; H[i + 1] + j * j <= V; j++)
-                X = min(X, j * C[i + 1] + query_seg(1, 1, N, H[i + 1] + j * j, H[i + 1] + (j + 1) * (j + 1) - 1) + F[i]);
-            X -= F[i];
-            update_seg(1, 1, N, H[i + 1], min(query_seg(1, 1, N, H[i + 1], H[i + 1]), X));
-            if (H[i + 1] > H[i])
-                update_seg(1, 1, N, H[i], INF);
-        }
+    init(1, 1, N);
 
-        ans = query_seg(1, 1, N, H[N], H[N]) + F[N - 1];
-    } else {
-        tree_lichao.push_back(Node(1, 1'000'000'000, Line(0, INF))), X = 0;
-        st.push_back({}), update_lichao(0, Line(H[1], 0));
-        arr.push_back(H[1]);
+    cin >> Q;
+    while (Q--) {
+        cin >> X >> Y >> Z;
 
-        for (int i = 1; i < N; i++) {
-            while (!arr.empty() && arr.back() < H[i + 1])
-                rollback_lichao(), arr.pop_back();
-            X = min(X + A[i], query_lichao(0, C[i + 1]) + F[i] - C[i + 1] * H[i + 1]);
-            st.push_back({}), update_lichao(0, Line(H[i + 1], X - F[i]));
-            arr.push_back(H[i + 1]);
-        }
-        ans = X;
+        update(1, 1, N, X, A[X], A[X]);
+        A[X] = Y, B[X] = Z;
+        update(1, 1, N, X, A[X], B[X]);
+
+        ans = tree[1].res;
+        cout << ans << '\n';
     }
-
-    cout << ans << '\n';
 
     return 0;
 }
