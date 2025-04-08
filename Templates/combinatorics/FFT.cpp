@@ -1,8 +1,6 @@
 typedef complex<double> cpx;
 const double PI = acos(-1);
 
-int S[MAX], X[MAX];
-
 void FFT(vector<cpx> &v, bool inv) {
     int S = v.size(), K;
     cpx W, WK, A, B;

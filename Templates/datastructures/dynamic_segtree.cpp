@@ -13,16 +13,12 @@ void update(int n, int s, int e, int x, int v) {
 
     int m = s + e >> 1;
     if (x <= m) {
-        if (tree[n].l == -1) {
-            tree[n].l = tree.size();
-            tree.push_back(Node());
-        }
+        if (tree[n].l == -1)
+            tree[n].l = tree.size(), tree.push_back(Node());
         update(tree[n].l, s, m, x, v);
     } else {
-        if (tree[n].r == -1) {
-            tree[n].r = tree.size();
-            tree.push_back(Node());
-        }
+        if (tree[n].r == -1)
+            tree[n].r = tree.size(), tree.push_back(Node());
         update(tree[n].r, m + 1, e, x, v);
     }
 
