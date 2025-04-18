@@ -2,29 +2,25 @@
 #define int long long
 using namespace std;
 
-int arr[100], dp[100][600000];
+const int MAX_N = 101;
+const int MAX_K = 500001;
 
-signed main()
-{
+int arr[MAX_N], dp[MAX_N][MAX_K];
+
+signed main() {
     ios_base::sync_with_stdio(false);
-    cin.tie(nullptr);
-    cout.tie(nullptr);
+    cin.tie(0), cout.tie(0);
 
-    int N, sm = 0;
+    int N, S = 0;
     cin >> N;
 
     for (int i = 0; i < N; i++)
-    {
-        cin >> arr[i];
-        sm += arr[i];
-    }
+        cin >> arr[i], S += arr[i];
 
     dp[0][arr[0]] = arr[0];
-    for (int i = 1; i < N; i++)
-    {
+    for (int i = 1; i < N; i++) {
         dp[i][arr[i]] = max(arr[i], dp[i - 1][arr[i]]);
-        for (int j = 0; j <= sm; j++)
-        {
+        for (int j = 0; j <= S; j++) {
             if (!dp[i - 1][j])
                 continue;
             dp[i][j] = max(dp[i][j], dp[i - 1][j]);

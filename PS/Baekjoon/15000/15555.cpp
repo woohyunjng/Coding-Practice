@@ -1,8 +1,9 @@
 #include <bits/stdc++.h>
 #define int long long
 
-#define MAX 3100
 using namespace std;
+
+const int MAX = 3001;
 
 int state[MAX][MAX], A[MAX][MAX], dp[MAX * 2][3];
 
