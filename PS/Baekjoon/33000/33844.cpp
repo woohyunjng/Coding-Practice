@@ -83,11 +83,13 @@ signed main() {
             queries[0].push_back(i);
         } else if (T == 2) {
             cin >> X >> Y, Z = lca(X, Y);
+            if (in[X] > in[Y])
+                swap(X, Y);
             L[i] = in[X], R[i] = in[Y], TL[i] = K;
-            if (L > R)
-                swap(L[i], R[i]);
             if (Z != X && Z != Y)
-                TG[i] = Z;
+                TG[i] = Z, L[i] = out[X];
+            if (L[i] > R[i])
+                swap(L[i], R[i]);
             queries[1].push_back(i);
         } else {
             cin >> V[++K][0] >> V[K][1], ans[i] = -1;
