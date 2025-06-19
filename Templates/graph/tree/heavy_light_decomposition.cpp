@@ -7,7 +7,7 @@ void dfs1(int node, int par) {
         if (i == par)
             continue;
         dfs1(i, node), sz[node] += sz[i];
-        if (sz[i] > sz[adj[node][0]])
+        if (sz[i] > sz[adj[node][0]] || adj[node][0] == par)
             swap(i, adj[node][0]);
     }
 }
