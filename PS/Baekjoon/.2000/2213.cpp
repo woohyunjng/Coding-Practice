@@ -1,0 +1,57 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int MAX = 10001;
+
+int V[MAX], dp[MAX][2];
+vector<int> adj[MAX], ans;
+
+void dfs(int node, int par) {
+    dp[node][1] = V[node];
+    for (int i : adj[node]) {
+        if (i == par)
+            continue;
+        dfs(i, node);
+        dp[node][0] += max(dp[i][0], dp[i][1]);
+        dp[node][1] += dp[i][0];
+    }
+}
+
+void track(int node, int par, int t) {
+    if (t == 1)
+        ans.push_back(node);
+
+    for (int i : adj[node]) {
+        if (i == par)
+            continue;
+        if (t == 1)
+            track(i, node, 0);
+        else
+            track(i, node, dp[i][0] < dp[i][1] ? 1 : 0);
+    }
+}
+
+signed main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0), cout.tie(0);
+
+    int N, X, Y;
+
+    cin >> N;
+    for (int i = 1; i <= N; i++)
+        cin >> V[i];
+    for (int i = 1; i < N; i++) {
+        cin >> X >> Y;
+        adj[X].push_back(Y), adj[Y].push_back(X);
+    }
+
+    dfs(1, 0), track(1, 0, dp[1][0] < dp[1][1] ? 1 : 0);
+    sort(ans.begin(), ans.end());
+
+    cout << max(dp[1][0], dp[1][1]) << '\n';
+    for (int i : ans)
+        cout << i << ' ';
+    cout << '\n';
+
+    return 0;
+}
