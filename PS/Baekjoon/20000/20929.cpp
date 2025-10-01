@@ -12,7 +12,7 @@ signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0), cout.tie(0);
 
-    int N, A = 1, B = 1;
+    int N, A = 1, B = 1, ans;
 
     cin >> N;
     while (N >>= 1) {
@@ -22,7 +22,8 @@ signed main() {
             B += N;
     }
 
-    cout << "!" << min(query(0, A), query(1, B)) << '\n', cout.flush();
+    ans = min(query(0, A), query(1, B));
+    cout << "! " << ans << '\n', cout.flush();
 
     return 0;
 }
