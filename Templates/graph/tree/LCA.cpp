@@ -1,4 +1,4 @@
-int N, parent[MAX][MAX_LOG], depth[MAX];
+int parent[MAX][MAX_LOG], depth[MAX];
 vector<int> adj[MAX];
 
 void dfs(int node, int par) {

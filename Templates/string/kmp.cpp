@@ -11,7 +11,7 @@ vector<int> get_pi(string P) {
     return pi;
 }
 
-vector<int> kmp(string S, string P) {
+vector<int> kmp(string S, string P) { // P가 S에 등장하는 첫 index 반환
     vector<int> pi = get_pi(P), ans;
     int S_size = S.size(), P_size = P.size(), j = 0;
 

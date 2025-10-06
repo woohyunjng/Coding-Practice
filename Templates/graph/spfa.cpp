@@ -1,32 +1,30 @@
-int N;
-vector<pr> arr[MAX];
+vector<pr> adj[MAX];
 int dis[MAX], cnt[MAX];
-bool checked[MAX];
+bool chk[MAX];
 
 void get_dis(int K) {
     int A;
     bool cycle;
 
     fill(dis, dis + N + 1, INF);
-    dis[K] = 0;
 
     queue<int> q;
-    q.push(K), checked[K] = true;
+    q.push(K), dis[K] = 0, chk[K] = true;
 
     while (!q.empty()) {
         A = q.front(), q.pop();
-        checked[A] = false;
+        chk[A] = false;
 
         if (++cnt[A] == N || dis[A] < -INF) {
             cycle = true;
             break;
         }
 
-        for (pr i : arr[A]) {
-            if (dis[A] + i.second < dis[i.first]) {
-                dis[i.first] = dis[A] + i.second;
-                if (!checked[i.first])
-                    checked[i.first] = true, q.push(i.first);
+        for (pr i : adj[A]) {
+            if (dis[A] + i[1] < dis[i[0]]) {
+                dis[i[0]] = dis[A] + i[1];
+                if (!chk[i[0]])
+                    chk[i[0]] = true, q.push(i[0]);
             }
         }
     }

@@ -1,13 +1,11 @@
-int sa[MAX], lcp[MAX];
+int sa[MAX], lcp[MAX]; // sa[i] -> 사전째 i번째의 suffix, lcp[i] -> sa[i]와 sa[i-1]의 lcp
 
-void sa_lcp(string S) {
+void init(string S) {
     int N = S.size(), K = 1;
-    vector<int> group(N + 1, 0), next_group(N + 1, 0), rnk(N + 1, 0);
+    vector<int> group(N + 1, 0), nxt(N + 1, 0), rnk(N + 1, 0);
 
-    for (int i = 0; i < N; i++) {
-        sa[i] = i;
-        group[i] = S[i] - 'a';
-    }
+    for (int i = 0; i < N; i++)
+        sa[i] = i, group[i] = S[i] - 'a';
 
     function<bool(int, int)> cmp = [&](int X, int Y) {
         if (group[X] == group[Y])
@@ -21,14 +19,13 @@ void sa_lcp(string S) {
 
         for (int i = 1; i < N; i++) {
             if (cmp(sa[i - 1], sa[i]))
-                next_group[sa[i]] = next_group[sa[i - 1]] + 1;
+                nxt[sa[i]] = nxt[sa[i - 1]] + 1;
             else
-                next_group[sa[i]] = next_group[sa[i - 1]];
+                nxt[sa[i]] = nxt[sa[i - 1]];
         }
 
         for (int i = 0; i < N; i++)
-            group[i] = next_group[i];
-
+            group[i] = nxt[i];
         K <<= 1;
     }
 

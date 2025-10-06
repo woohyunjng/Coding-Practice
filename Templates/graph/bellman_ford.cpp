@@ -1,25 +1,23 @@
-int N;
-vector<pr> arr[MAX];
+vector<pr> adj[MAX];
 int dis[MAX];
 
-void get_dis(int K) {
-    int A;
-    bool cycle, change;
+void init() {
+    bool cycle = false, flag;
 
-    fill(dis, dis + N + 1, INF), dis[K] = 0;
+    fill(dis, dis + N + 1, INF), dis[S] = 0;
 
     for (int i = 0; i < N; i++) {
-        change = false;
+        flag = false;
         for (int j = 1; j <= N; j++) {
             if (dis[j] == INF)
                 continue;
-            for (pr k : arr[j]) {
-                if (dis[j] + k.second < dis[k.first])
-                    dis[k.first] = dis[j] + k.second, change = true;
+            for (pr k : adj[j]) {
+                if (dis[j] + k[1] < dis[k[0]])
+                    dis[k[0]] = dis[j] + k[1], flag = true;
             }
         }
 
-        if (i == N - 1 && change)
+        if (i == N - 1 && flag)
             cycle = true;
     }
 }

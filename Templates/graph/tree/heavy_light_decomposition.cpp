@@ -21,3 +21,15 @@ void dfs2(int node, int par) {
         dfs2(i, node);
     }
 }
+
+void query(int U, int V) {
+    while (top[U] ^ top[V]) {
+        if (depth[top[U]] < depth[top[V]])
+            swap(U, V);
+        // query : in[top[U]] .. in[U]
+        U = parent[top[U]];
+    }
+    if (depth[U] > depth[V])
+        swap(U, V);
+    // query : in[U] .. in[V]
+}

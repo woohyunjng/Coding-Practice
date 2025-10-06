@@ -1,0 +1,1 @@
+double dis(pr A, pr B) { return (double)sqrt((A[0] - B[0]) * (A[0] - B[0]) + (A[1] - B[1]) * (A[1] - B[1])); }

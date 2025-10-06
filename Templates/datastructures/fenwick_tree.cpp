@@ -2,22 +2,21 @@ int N, A[MAX], fenwick[MAX];
 
 void build() {
     for (int i = 1; i <= N; i++) {
-        fenwick[i] += arr[i];
+        fenwick[i] += A[i];
         if (i + (i & -i) <= N)
             fenwick[i + (i & -i)] += fenwick[i];
     }
 }
 
 void update(int n, int val) {
-    arr[n] += val;
-    while (n <= N)
-        fenwick[n] += val, n += n & -n;
+    for (; n <= N; n += n & -n)
+        fenwick[n] += val;
 }
 
 int query(int n) {
     int res = 0;
-    while (n)
-        res += fenwick[n], n -= n & -n;
+    for (; n > 0; n -= n & -n)
+        res += fenwick[n];
     return res;
 }
 

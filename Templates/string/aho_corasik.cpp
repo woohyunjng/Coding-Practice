@@ -1,78 +1,66 @@
 struct Node {
-    int children[26];
-    int pi = 0;
+    int children[26], pi = 0;
     bool output = false;
+
     Node() { fill(children, children + 26, -1); }
 };
 
-class AhoCorasick {
-  public:
-    vector<Node> trie;
-    AhoCorasick() { trie.push_back(Node()); }
+vector<Node> trie;
 
-    void insert(string &S) {
-        int cur = 0, c;
+void insert(string S) {
+    int X = 0, C;
+    for (char i : S) {
+        C = i - 'a';
+        if (trie[X].children[C] == -1)
+            trie[X].children[C] = trie.size(), trie.push_back(Node());
+        X = trie[X].children[C];
+    }
+    trie[X].output = true;
+}
 
-        for (char ch : S) {
-            c = ch - 'a';
-            if (trie[cur].children[c] == -1) {
-                trie[cur].children[c] = trie.size();
-                trie.push_back(Node());
-            }
-            cur = trie[cur].children[c];
-        }
-        trie[cur].output = true;
+void build() {
+    queue<int> q;
+    int X, C, P;
+
+    for (int i = 0; i < 26; i++) {
+        C = trie[0].children[i];
+        if (C == -1)
+            trie[0].children[i] = 0;
+        else
+            trie[C].pi = 0, q.push(C);
     }
 
-    void build() {
-        queue<int> q;
-        int c, p, cur, child;
+    while (!q.empty()) {
+        X = q.front(), q.pop();
 
-        for (c = 0; c < 26; c++) {
-            child = trie[0].children[c];
-            if (child == -1)
-                trie[0].children[c] = 0;
-            else {
-                trie[child].pi = 0;
-                q.push(child);
-            }
-        }
+        for (int i = 0; i < 26; i++) {
+            C = trie[X].children[i];
+            if (C == -1)
+                continue;
 
-        while (!q.empty()) {
-            cur = q.front();
-            q.pop();
+            P = trie[X].pi;
+            while (trie[P].children[i] == -1)
+                P = trie[P].pi;
 
-            for (c = 0; c < 26; c++) {
-                child = trie[cur].children[c];
-                if (child == -1)
-                    continue;
-
-                p = trie[cur].pi;
-                while (trie[p].children[c] == -1)
-                    p = trie[p].pi;
-
-                p = trie[p].children[c];
-                trie[child].pi = p;
-                if (trie[p].output)
-                    trie[child].output = true;
-
-                q.push(child);
-            }
+            P = trie[P].children[i], trie[C].pi = P;
+            if (trie[P].output)
+                trie[C].output = true;
+            q.push(C);
         }
     }
+}
 
-    bool query(string &S) {
-        int cur = 0, c;
-        bool res = false;
+bool query(string S) {
+    int X = 0, C;
+    bool res = false;
 
-        for (char ch : S) {
-            c = ch - 'a';
-            while (trie[cur].children[c] == -1)
-                cur = trie[cur].pi;
-            cur = trie[cur].children[c];
-            res = res || trie[cur].output;
-        }
-
-        return res;
+    for (char i : S) {
+        C = i - 'a';
+        while (trie[X].children[C] == -1)
+            X = trie[X].pi;
+        X = trie[X].children[C];
+        res = res || trie[X].output;
     }
-};
+
+    return res;
+}

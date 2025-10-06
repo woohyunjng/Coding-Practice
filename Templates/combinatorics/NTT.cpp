@@ -46,6 +46,7 @@ void NTT(vector<int> &v, bool inv) {
 
 vector<int> mul(vector<int> A, vector<int> B) {
     int S = 1, SZ = (int)A.size() + B.size() - 1;
+
     while (S < A.size() + B.size())
         S <<= 1;
     A.resize(S), B.resize(S);

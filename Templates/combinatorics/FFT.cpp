@@ -49,5 +49,6 @@ vector<int> mul(vector<int> A, vector<int> B) {
     res.resize(S);
     for (int i = 0; i < S; i++)
         res[i] = round(vC[i].real());
+
     return res;
 }

@@ -1,9 +1,6 @@
-double distance_line_point(pr A, pr B, pr C) {
-    double a, b, c, s, S;
-    a = sqrt(pow(B.first - C.first, 2) + pow(B.second - C.second, 2));
-    b = sqrt(pow(A.first - C.first, 2) + pow(A.second - C.second, 2));
-    c = sqrt(pow(A.first - B.first, 2) + pow(A.second - B.second, 2));
-    s = (a + b + c) / 2;
-    S = sqrt(s * (s - a) * (s - b) * (s - c));
-    return 2 * S / c;
+double distance_line_point(pr A, pr B, pr C) { // A-B와 C 사이 거리
+    double AL = dis(B, C), BL = dis(A, C), CL = dis(A, B), SL, S;
+
+    SL = (AL + BL + CL) / 2, S = sqrt(SL * (SL - AL) * (SL - BL) * (SL - CL));
+    return 2 * S / CL;
 }

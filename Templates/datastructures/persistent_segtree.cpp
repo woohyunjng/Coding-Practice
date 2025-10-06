@@ -36,11 +36,11 @@ void update(int n, int s, int e, int x, int v) {
     int m = s + e >> 1;
     if (x <= m) {
         tree.push_back(Node(tree[tree[n].l].l, tree[tree[n].l].r, tree[tree[n].l].val));
-        tree[n].l = tree.size() - 1;
+        tree[n].l = (int)tree.size() - 1;
         update(tree[n].l, s, m, x, v);
     } else {
         tree.push_back(Node(tree[tree[n].r].l, tree[tree[n].r].r, tree[tree[n].r].val));
-        tree[n].r = tree.size() - 1;
+        tree[n].r = (int)tree.size() - 1;
         update(tree[n].r, m + 1, e, x, v);
     }
 }

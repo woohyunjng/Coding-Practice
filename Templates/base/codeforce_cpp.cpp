@@ -1,12 +1,25 @@
 #include <bits/stdc++.h>
+
+#pragma GCC optimize("O3")
+#pragma GCC optimize("Ofast")
+#pragma GCC optimize("unroll-loops")
+
 #define int long long
+#define double long double
 
 using namespace std;
+
+typedef array<int, 2> pr;
+typedef array<int, 3> tp;
 
 const int MAX = 300000;
 
 void solve() {
-    int N;
+    int N, ans = 0;
+
+    cin >> N;
+
+    cout << ans << '\n';
 }
 
 signed main() {

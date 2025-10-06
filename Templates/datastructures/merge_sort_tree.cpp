@@ -1,5 +1,5 @@
 int N, A[MAX];
-vector<int> tree[MAX * 2];
+vector<int> tree[MAX << 1];
 
 void init() {
     for (int i = 1; i <= N; i++)
