@@ -4,10 +4,7 @@ int flow[MAX], cap[MAX], par[MAX], cost[MAX], dis[MAX], G[MAX][2];
 bool chk[MAX];
 vector<pr> adj[MAX];
 
-signed main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(0), cout.tie(0);
-
+void init() {
     int S, E, X, Y, cnt = 0, res_f = 0, res_c = 0;
     queue<int> q;
 
