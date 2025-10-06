@@ -1,103 +1,78 @@
 #include <bits/stdc++.h>
 #define int long long
-#define MAX 1000
 
 using namespace std;
-typedef pair<int, int> pr;
 
-vector<int> arr[MAX];
-int cap[MAX][MAX], flow[MAX][MAX], cost[MAX][MAX], dp[MAX], parent[MAX];
-bool checked[MAX];
+typedef array<int, 2> pr;
 
-void add_path(int A, int B, int cst, int cap_size)
-{
-    arr[A].push_back(B);
-    arr[B].push_back(A);
+const int MAX = 401;
+const int INF = 0x3f3f3f3f3f3f3f3f;
 
-    cost[A][B] = cst;
-    cost[B][A] = -cst;
+// O(VE^2) Edmonds-Karp
 
-    cap[A][B] = cap_size;
-    flow[A][B] = 0;
-}
+int flow[MAX], cap[MAX], par[MAX], cost[MAX], dis[MAX], G[MAX][2];
+bool chk[MAX];
+vector<pr> adj[MAX];
 
-pr minimum_cost_maximum_flow(int start, int end)
-{
+signed main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0), cout.tie(0);
+
+    int N, M, K, X, Y, cnt = 0, ans_f = 0, ans_c = 0;
     queue<int> q;
-    int val, money = 0, res = 0, A;
 
-    while (true)
-    {
-        fill(checked, checked + end + 1, false);
-        fill(dp, dp + end + 1, LLONG_MAX);
-        fill(parent, parent + end + 1, -1);
+    cin >> N >> M;
+    for (int i = 1; i <= N; i++) {
+        cin >> K;
+        while (K--) {
+            cin >> X >> Y;
+            adj[i].push_back({X + N, cnt << 1}), adj[X + N].push_back({i, cnt << 1 | 1});
+            G[cnt][0] = i, G[cnt][1] = X + N;
+            cap[cnt << 1] = 1, cost[cnt << 1] = Y, cost[cnt << 1 | 1] = -Y, cnt++;
+        }
 
-        dp[start] = 0;
-        checked[start] = true;
-        q.push(start);
+        adj[0].push_back({i, cnt << 1}), adj[i].push_back({0, cnt << 1 | 1});
+        G[cnt][0] = 0, G[cnt][1] = i;
+        cap[cnt << 1] = 1, cnt++;
+    }
 
-        while (!q.empty())
-        {
-            A = q.front();
-            checked[A] = false;
-            q.pop();
+    for (int i = 1; i <= M; i++) {
+        adj[i + N].push_back({N + M + 1, cnt << 1}), adj[N + M + 1].push_back({i + N, cnt << 1 | 1});
+        G[cnt][0] = i + N, G[cnt][1] = N + M + 1;
+        cap[cnt << 1] = 1, cnt++;
+    }
 
-            for (int i : arr[A])
-            {
-                if (cap[A][i] - flow[A][i] <= 0 || dp[A] + cost[A][i] >= dp[i])
+    while (true) {
+        for (int i = 1; i <= N + M + 1; i++)
+            dis[i] = INF, chk[i] = false, par[i] = -1;
+
+        q.push(0), dis[0] = 0, chk[0] = true;
+        while (!q.empty()) {
+            X = q.front(), q.pop();
+            chk[X] = false;
+
+            for (pr i : adj[X]) {
+                if (flow[i[1]] == cap[i[1]] || dis[X] + cost[i[1]] >= dis[i[0]])
                     continue;
-                dp[i] = dp[A] + cost[A][i];
-                parent[i] = A;
-                if (!checked[i])
-                {
-                    checked[i] = true;
-                    q.push(i);
-                }
+                dis[i[0]] = dis[X] + cost[i[1]], par[i[0]] = i[1];
+                if (!chk[i[0]])
+                    q.push(i[0]), chk[i[0]] = true;
             }
         }
 
-        if (parent[end] == -1)
+        if (par[N + M + 1] == -1)
             break;
 
-        val = LLONG_MAX;
-        for (int i = end; i != start; i = parent[i])
-            val = min(val, cap[parent[i]][i] - flow[parent[i]][i]);
-
-        for (int i = end; i != start; i = parent[i])
-        {
-            money += val * cost[parent[i]][i];
-            flow[parent[i]][i] += val;
-            flow[i][parent[i]] -= val;
-        }
-        res += val;
-    }
-    return {res, money};
-}
-
-signed main()
-{
-    ios_base::sync_with_stdio(false);
-    cin.tie(nullptr);
-    cout.tie(nullptr);
-
-    int N, M, A, B, C;
-    cin >> N >> M;
-
-    for (int i = 1; i <= N; i++)
-    {
-        add_path(0, i, 0, 1);
-        cin >> A;
-        for (int j = 0; j < A; j++)
-        {
-            cin >> B >> C;
-            add_path(i, N + B, C, 1);
-        }
+        X = INF;
+        for (Y = N + M + 1; Y != 0; Y = G[par[Y] >> 1][par[Y] & 1])
+            X = min(X, cap[par[Y]] - flow[par[Y]]);
+        for (Y = N + M + 1; Y != 0; Y = G[par[Y] >> 1][par[Y] & 1])
+            flow[par[Y]] += X, flow[par[Y] ^ 1] -= X;
+        ans_f += X, ans_c += dis[N + M + 1] * X;
     }
 
-    for (int i = 1; i <= M; i++)
-        add_path(N + i, N + M + 1, 0, 1);
+    cout << ans_f << '\n';
+    cout << ans_c << '\n';
 
-    pr res = minimum_cost_maximum_flow(0, N + M + 1);
-    cout << res.first << '\n'
-         << res.second;
+    return 0;
 }
