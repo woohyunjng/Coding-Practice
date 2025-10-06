@@ -1,81 +1,38 @@
-class MaximumFlow {
-  private:
-    vector<int> level, work;
+// O(VE^2) Edmonds-Karp
 
-    int dinic_dfs(int K, int F, int end) {
-        int x, val;
-        if (K == end)
-            return F;
+int flow[MAX], cap[MAX], par[MAX], G[MAX][2];
+vector<pr> adj[MAX];
 
-        for (int &i = work[K]; i < arr[K].size(); i++) {
-            x = arr[K][i];
-            if (level[x] != level[K] + 1 || cap[K][x] - flow[K][x] <= 0)
-                continue;
-            val = dinic_dfs(x, min(cap[K][x] - flow[K][x], F), end);
-            if (val > 0) {
-                flow[K][x] += val;
-                flow[x][K] -= val;
-                return val;
-            }
-        }
-        return 0;
+void init() {
+    int U, V, res = 0, S, E;
+    queue<int> q;
+
+    for (int i = 0; i < M; i++) {
+        cin >> U >> V;
+        adj[U].push_back({V, i << 1}), adj[V].push_back({U, i << 1 | 1});
+        cap[i << 1] = 1, G[i][0] = U, G[i][1] = V;
     }
 
-  public:
-    vector<vector<int>> arr, cap, flow;
-    int N, source, sink;
+    while (true) {
+        fill(par + 1, par + N + 1, -1);
 
-    MaximumFlow(int n) : N(n),
-                         arr(n + 1), cap(n + 1, vector<int>(n + 1, 0)), flow(n + 1, vector<int>(n + 1, 0)),
-                         level(n + 1), work(n + 1) {}
-
-    void add_path(int A, int B, int cap_size, bool is_directed = true) {
-        arr[A].push_back(B);
-        arr[B].push_back(A);
-
-        if (is_directed) {
-            cap[A][B] = cap_size;
-            cap[B][A] = 0;
-        } else {
-            cap[A][B] = cap_size;
-            cap[B][A] = cap_size;
-        }
-
-        flow[A][B] = 0;
-        flow[B][A] = 0;
-    }
-
-    int run(int source, int sink) {
-        int K, res = 0, val;
-        queue<int> q;
-
-        while (true) {
-            fill(level.begin(), level.end(), -1);
-            fill(work.begin(), work.end(), 0);
-
-            level[source] = 0;
-            q.push(source);
-
-            while (!q.empty()) {
-                K = q.front();
-                q.pop();
-
-                for (int i : arr[K]) {
-                    if (level[i] != -1 || cap[K][i] - flow[K][i] <= 0)
-                        continue;
-                    level[i] = level[K] + 1;
-                    q.push(i);
-                }
-            }
-            if (level[sink] == -1)
-                return res;
-
-            while (true) {
-                val = dinic_dfs(source, INF, sink);
-                if (!val)
-                    break;
-                res += val;
+        q.push(S), par[S] = 0;
+        while (!q.empty()) {
+            V = q.front(), q.pop();
+            for (pr i : adj[V]) {
+                if (par[i[0]] != -1 || flow[i[1]] == cap[i[1]])
+                    continue;
+                q.push(i[0]), par[i[0]] = i[1];
             }
         }
+        if (par[E] == -1)
+            break;
+
+        U = INF;
+        for (V = E; V != S; V = G[par[V] >> 1][par[V] & 1])
+            U = min(U, cap[par[V]] - flow[par[V]]);
+        for (V = E; V != S; V = G[par[V] >> 1][par[V] & 1])
+            flow[par[V]] += U, flow[par[V] ^ 1] -= U;
+        res += U;
     }
-};
+}

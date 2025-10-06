@@ -1,70 +1,44 @@
-class BipartiteMatching {
-  private:
-    int level[MAX];
+// O(Esqrt(V)) Hopcroft-Karp
 
-    bool hop_dfs(int K) {
-        for (int i : arr[K]) {
-            if (level[B[i]] == level[K] + 1 && (!B[i] || hop_dfs(B[i]))) {
-                A[K] = i, B[i] = K;
-                return true;
-            }
+vector<int> adj[MAX];
+int dis[MAX], assignA[MAX], assignB[MAX];
+
+bool dfs(int node) {
+    for (int i : adj[node]) {
+        if (!assignB[i] || (dis[assignB[i]] == dis[node] + 1 && dfs(assignB[i]))) {
+            assignA[node] = i, assignB[i] = node;
+            return true;
+        }
+    }
+    dis[node] = -1;
+    return false;
+}
+
+void init() {
+    int X, res = 0;
+    queue<int> q;
+
+    while (true) {
+        for (int i = 1; i <= N; i++) {
+            if (!assignA[i])
+                dis[i] = 0, q.push(i);
+            else
+                dis[i] = -1;
         }
 
-        level[K] = INF;
-        return false;
-    }
-
-  public:
-    vector<int> arr[MAX], st;
-    int A[MAX], B[MAX];
-
-    BipartiteMatching(int N) {
-        fill(A, A + N + 1, 0);
-        fill(B, B + N + 1, 0);
-
-        st.clear();
-        for (int i = 0; i <= N; i++)
-            arr[i].clear();
-    }
-
-    void add_path(int X, int Y) {
-        st.push_back(X);
-        arr[X].push_back(Y);
-    }
-
-    int run() {
-        queue<int> q;
-        int K, res = 0, flow;
-
-        while (true) {
-            level[0] = INF;
-            for (int i : st) {
-                if (!A[i]) {
-                    level[i] = 0;
-                    q.push(i);
-                } else
-                    level[i] = INF;
-            }
-
-            while (!q.empty()) {
-                K = q.front(), q.pop();
-                for (int i : arr[K]) {
-                    if (level[B[i]] == INF) {
-                        level[B[i]] = level[K] + 1;
-                        q.push(B[i]);
-                    }
-                }
-            }
-
-            if (level[0] == INF)
-                break;
-
-            for (int i : st) {
-                if (!A[i] && hop_dfs(i))
-                    res++;
-            }
+        while (!q.empty()) {
+            X = q.front(), q.pop();
+            for (int i : adj[X])
+                if (assignB[i] && dis[assignB[i]] == -1)
+                    dis[assignB[i]] = dis[X] + 1, q.push(assignB[i]);
         }
 
-        return res;
+        X = 0;
+        for (int i = 1; i <= N; i++)
+            if (!assignA[i] && dfs(i))
+                X++;
+        if (!X)
+            break;
+        res += X;
     }
-};
+}
