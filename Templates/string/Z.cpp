@@ -5,8 +5,7 @@ void init() {
             Z[i] = min(R - i, Z[i - L]);
         while (i + Z[i] < N && S[Z[i]] == S[i + Z[i]])
             Z[i]++;
-        if (i > R)
-            L = i;
-        R = max(R, i + Z[i] - 1);
+        if (i + Z[i] > R)
+            L = i, R = i + Z[i];
     }
 }
