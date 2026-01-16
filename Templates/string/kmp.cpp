@@ -20,7 +20,7 @@ vector<int> kmp(string S, string P) { // P가 S에 등장하는 첫 index 반환
             j = pi[j - 1];
         if (S[i] == P[j]) {
             if (j == P_size - 1)
-                ans.push_back(i - P_size + 2), j = pi[j];
+                ans.push_back(i - P_size + 1), j = pi[j];
             else
                 j++;
         }
