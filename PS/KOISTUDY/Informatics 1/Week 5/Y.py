@@ -1,1 +1,0 @@
-print(bool(int(input())))
